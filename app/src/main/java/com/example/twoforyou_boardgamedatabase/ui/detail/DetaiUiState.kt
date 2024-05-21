@@ -1,5 +1,5 @@
 package com.example.twoforyou_boardgamedatabase.ui.detail
 
-data class DetaiUiState(
-    val sampleString : String = ""
+data class DetailUiState(
+    val htmlString : String = ""
 )

@@ -4,7 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.twoforyou_boardgamedatabase.ui.display.DisplayBoardgameScreen
+import com.example.twoforyou_boardgamedatabase.ui.detail.DetailScreen
+import com.example.twoforyou_boardgamedatabase.ui.display.DisplayScreen
 
 
 @Composable
@@ -14,10 +15,15 @@ fun Navigation(
 
     NavHost(
         navController = navController,
-        startDestination = Screen.DisplayScreen
+        startDestination = Screen.DetailScreen
     ) {
         composable<Screen.DisplayScreen> {
-            DisplayBoardgameScreen(
+            DisplayScreen(
+                navController = navController
+            )
+        }
+        composable<Screen.DetailScreen> {
+            DetailScreen(
                 navController = navController
             )
         }

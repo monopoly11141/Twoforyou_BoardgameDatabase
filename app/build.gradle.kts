@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
-    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -90,4 +90,12 @@ dependencies {
     //gson converter
     implementation (libs.converter.gson)
 
+    //jsoup
+    implementation(libs.jsoup)
+
+    //jackson
+    implementation (libs.jackson.module.kotlin)
+    implementation(libs.jackson.dataformat.xml)
+    implementation(libs.stax.api)
 }
+

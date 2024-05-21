@@ -1,6 +1,10 @@
 [versions]
 agp = "8.4.0-rc02"
 converterGson = "2.9.0"
+jacksonDataformatXml = "2.17.1"
+jacksonModuleKotlin = "2.17.1"
+jacksonModuleKotlinVersion = "2.13.1"
+jsoup = "1.14.3"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -14,11 +18,16 @@ retrofit = "2.11.0"
 serialization="1.6.3"
 hiltAndroid = "2.49"
 hiltNavigationFragment = "1.2.0"
+staxApi = "1.0"
 workRuntimeKtx = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jacksonDataformatXml" }
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jacksonModuleKotlin" }
+jackson-module-kotlin-v2131 = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jacksonModuleKotlinVersion" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -42,6 +51,7 @@ androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref =
 androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigationFragment" }
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNavigationFragment" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+stax-api = { module = "javax.xml.stream:stax-api", version.ref = "staxApi" }
 
 
 [plugins]
