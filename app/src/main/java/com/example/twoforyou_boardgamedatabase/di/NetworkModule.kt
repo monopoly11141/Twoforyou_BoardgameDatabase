@@ -3,6 +3,8 @@ package com.example.twoforyou_boardgamedatabase.di
 import com.example.twoforyou_boardgamedatabase.utils.Constant.BASE_URL
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,10 +21,11 @@ object NetworkModule {
     @Provides
     fun provideRetrofitInstance(
     ): Retrofit {
+        val parser = TikXml.Builder().exceptionOnUnreadXml(false).build()
+
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(OkHttpClient())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(TikXmlConverterFactory.create(parser))
             .build()
     }
 

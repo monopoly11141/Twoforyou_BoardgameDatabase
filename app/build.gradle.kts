@@ -97,5 +97,13 @@ dependencies {
     implementation (libs.jackson.module.kotlin)
     implementation(libs.jackson.dataformat.xml)
     implementation(libs.stax.api)
+
+    //xml parser
+    implementation(libs.annotation)
+    implementation (libs.core)
+    implementation (libs.retrofit.converter)
+    kapt (libs.processor)
+
+    implementation (libs.stax.api)
 }
 

@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -26,8 +27,6 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-data class Simple(val x: String, val y: String)
-data class Test(val simple: Simple)
 
 @Composable
 fun DetailScreen(
@@ -36,25 +35,26 @@ fun DetailScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    viewModel.updateHtmlString()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-
-        var htmlString = viewModel.xmlToListParser(state.htmlString)
-        htmlString = htmlString.replace("[", "")
-        htmlString = htmlString.replace("]", "")
-        val htmlStringList = htmlString.split("}, {")
-        LazyColumn {
-            items(htmlStringList) {
-                Text(it)
-            }
-        }
-    }
+    val items = viewModel.updateItems()
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center
+//    ) {
+//
+//        var htmlString = viewModel.xmlToListParser(state.htmlString)
+//        htmlString = htmlString.replace("[", "")
+//        htmlString = htmlString.replace("]", "")
+//        val htmlStringList = htmlString.split("}, {")
+//        LazyColumn {
+//            items(htmlStringList) {
+//                Text(it)
+//            }
+//        }
+//    }
+    Text(text = items.item.description)
 
 
 }

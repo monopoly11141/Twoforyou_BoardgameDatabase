@@ -1,5 +1,6 @@
 [versions]
 agp = "8.4.0-rc02"
+annotation = "0.8.13"
 converterGson = "2.9.0"
 jacksonDataformatXml = "2.17.1"
 jacksonModuleKotlin = "2.17.1"
@@ -23,7 +24,9 @@ workRuntimeKtx = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+annotation = { module = "com.tickaroo.tikxml:annotation", version.ref = "annotation" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+core = { module = "com.tickaroo.tikxml:core", version.ref = "annotation" }
 jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jacksonDataformatXml" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jacksonModuleKotlin" }
 jackson-module-kotlin-v2131 = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jacksonModuleKotlinVersion" }
@@ -50,7 +53,9 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigationFragment" }
 androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigationFragment" }
 androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNavigationFragment" }
+processor = { module = "com.tickaroo.tikxml:processor", version.ref = "annotation" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converter = { module = "com.tickaroo.tikxml:retrofit-converter", version.ref = "annotation" }
 stax-api = { module = "javax.xml.stream:stax-api", version.ref = "staxApi" }
 
 
