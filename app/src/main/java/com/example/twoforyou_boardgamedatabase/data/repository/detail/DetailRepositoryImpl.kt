@@ -31,14 +31,13 @@ class DetailRepositoryImpl @Inject constructor(
         return retrofit.create(BoardgamegeekApi::class.java)
     }
 
-    override fun updateItems() : Items {
+    override fun updateItems() {
         val call = getBoardgamegeekApi().boardListPost("224517")
         call.enqueue(object : Callback<Items> {
             override fun onResponse(
                 call: Call<Items>,
                 response: Response<Items>
             ) {
-                Log.d(TAG, "updateItems: ${call.execute().body()}")
                 if(response.isSuccessful) {
                     try {
                         Log.d(TAG, "onResponse: successful response, ${response.body()!!.item}")
@@ -51,32 +50,9 @@ class DetailRepositoryImpl @Inject constructor(
             }
 
             override fun onFailure(p0: Call<Items>, p1: Throwable) {
-                Log.d(TAG, "onResponse onFailure: operation failed")
+                Log.d(TAG, "onResponse onFailure: operation failed with item: ${p0.toString()}")
                 p1.printStackTrace()
             }
         })
-        return items.value
     }
-//
-//    override fun updateHtmlString(){
-//        val call = getBoardgamegeekApi().boardListPost("224517")
-//        call.enqueue(object : Callback<Items> {
-//            override fun onResponse(
-//                call: Call<Items>,
-//                response: Response<Items>
-//            ) {
-//                if(response.isSuccessful) {
-//                    try {
-//                        _htmlString.value = response.body()!!
-//                    } catch (e: Exception) {
-//
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(p0: Call<Item>, t: Throwable) {
-//
-//            }
-//        })
-//    }
 }

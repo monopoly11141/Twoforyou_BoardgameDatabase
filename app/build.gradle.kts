@@ -85,8 +85,7 @@ dependencies {
     //work
     implementation(libs.androidx.work.runtime.ktx)
 
-    //retrofit
-    implementation(libs.retrofit)
+
     //gson converter
     implementation (libs.converter.gson)
 
@@ -98,12 +97,13 @@ dependencies {
     implementation(libs.jackson.dataformat.xml)
     implementation(libs.stax.api)
 
-    //xml parser
-    implementation(libs.annotation)
+    implementation (libs.retrofit.v290)
+    implementation (libs.logging.interceptor)
+
+    implementation (libs.annotation)
     implementation (libs.core)
     implementation (libs.retrofit.converter)
-    kapt (libs.processor)
 
-    implementation (libs.stax.api)
+    kapt (libs.processor)
 }
 

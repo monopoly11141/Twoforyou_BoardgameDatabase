@@ -22,7 +22,6 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val repository: DetailRepository
 ) : ViewModel() {
-    private lateinit var items: Items
 
     private val _state = MutableStateFlow(DetailUiState())
     val state = combine(
@@ -34,42 +33,14 @@ class DetailViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
-    fun updateItems() : Items{
+    fun updateItems() {
         viewModelScope.launch {
-            items = repository.updateItems()
+            repository.updateItems()
         }
         _state.update {
             it.copy(
                 items = repository.items.value
             )
         }
-        return items
-    }
-//
-//    fun updateHtmlString() {
-//        viewModelScope.launch {
-//            repository.updateHtmlString()
-//        }
-//        _state.update {
-//            it.copy(
-//                htmlString = repository.htmlString.value
-//            )
-//        }
-//    }
-//
-//    fun xmlToListParser(xmlString: String) : String {
-//        val xmlMapper = XmlMapper()
-//        val stringList = mutableListOf<String>()
-//        try {
-//            stringList.add(xmlMapper.readValue(xmlString, stringList.javaClass).toString())
-//
-//        }catch(e: Exception) {
-//            e.printStackTrace()
-//        }
-//        return stringList.joinToString()
-//    }
-
-    suspend fun getItems(): Item {
-        return repository.getBoardgamegeekApi().boardListPost("224517").execute().body()!!.item
     }
 }

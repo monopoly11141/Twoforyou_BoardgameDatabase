@@ -8,5 +8,6 @@ import com.tickaroo.tikxml.annotation.Xml
 @Xml(name= "items")
 data class Items(
     @Element(name="item")
-    val item: Item
+    val item: Item,
+
 )

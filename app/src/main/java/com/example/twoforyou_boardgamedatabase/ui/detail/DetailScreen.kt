@@ -35,26 +35,9 @@ fun DetailScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    val items = viewModel.updateItems()
-//
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//
-//        var htmlString = viewModel.xmlToListParser(state.htmlString)
-//        htmlString = htmlString.replace("[", "")
-//        htmlString = htmlString.replace("]", "")
-//        val htmlStringList = htmlString.split("}, {")
-//        LazyColumn {
-//            items(htmlStringList) {
-//                Text(it)
-//            }
-//        }
-//    }
-    Text(text = items.item.description)
+    viewModel.updateItems()
+
+    Text(text = state.items.item.description)
 
 
 }

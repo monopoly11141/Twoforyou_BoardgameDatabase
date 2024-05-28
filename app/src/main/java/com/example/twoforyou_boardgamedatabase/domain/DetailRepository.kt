@@ -9,5 +9,5 @@ import retrofit2.Retrofit
 interface DetailRepository {
     val items : StateFlow<Items>
     fun getBoardgamegeekApi(): BoardgamegeekApi
-    fun updateItems() : Items
+    fun updateItems()
 }
