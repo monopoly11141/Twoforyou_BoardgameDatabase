@@ -8,12 +8,11 @@ import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "item")
 data class Item(
-//    @Attribute(name = "statistics")
-//    var statistics: Statistics
     @PropertyElement(name = "description")
     var description: String = "",
-    @Path("link")
-    @Element(name = "link")
-    var link: Link = Link()
+    @Element
+    var link: List<Link>,
+    @Element(name = "statistics")
+    var statistics: Statistics
 )
 

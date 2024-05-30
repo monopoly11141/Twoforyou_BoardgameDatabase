@@ -36,8 +36,10 @@ fun DetailScreen(
     val state by viewModel.state.collectAsState()
 
     viewModel.updateItems()
-
-    Text(text = state.items.item.description)
+    Column {
+        Text(text = state.items.item.statistics.ratings.ranks.toString())
+        Text(text = state.items.item.statistics.ratings.toString())
+    }
 
 
 }

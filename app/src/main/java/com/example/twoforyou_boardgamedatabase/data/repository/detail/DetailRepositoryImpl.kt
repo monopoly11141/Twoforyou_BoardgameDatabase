@@ -1,9 +1,11 @@
 package com.example.twoforyou_boardgamedatabase.data.repository.detail
 
 import android.content.ContentValues.TAG
+import android.media.Rating
 import android.util.Log
 import com.example.twoforyou_boardgamedatabase.data.model.Item
 import com.example.twoforyou_boardgamedatabase.data.model.Items
+import com.example.twoforyou_boardgamedatabase.data.model.Link
 import com.example.twoforyou_boardgamedatabase.data.model.Ranks
 import com.example.twoforyou_boardgamedatabase.data.model.Ratings
 import com.example.twoforyou_boardgamedatabase.data.model.Statistics
@@ -24,7 +26,8 @@ class DetailRepositoryImpl @Inject constructor(
     private val retrofit: Retrofit
 ) : DetailRepository {
 
-    private val _items = MutableStateFlow(Items(Item("")))
+    //private val _items = MutableStateFlow(Items(Item("")))
+    private val _items = MutableStateFlow(Items(Item("",listOf(Link()), Statistics())))
     override val items: StateFlow<Items>
         get() = _items.asStateFlow()
     override fun getBoardgamegeekApi(): BoardgamegeekApi {
