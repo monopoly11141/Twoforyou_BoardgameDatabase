@@ -37,7 +37,7 @@ fun DetailScreen(
 
     viewModel.updateItems()
     Column {
-        Text(text = state.items.item.statistics.ratings.ranks.toString())
+        Text(text = state.items.item.name.toString())
         Text(text = state.items.item.statistics.ratings.toString())
     }
 

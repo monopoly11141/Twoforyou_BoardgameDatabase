@@ -27,7 +27,7 @@ class DetailRepositoryImpl @Inject constructor(
 ) : DetailRepository {
 
     //private val _items = MutableStateFlow(Items(Item("")))
-    private val _items = MutableStateFlow(Items(Item("",listOf(Link()), Statistics())))
+    private val _items = MutableStateFlow(Items())
     override val items: StateFlow<Items>
         get() = _items.asStateFlow()
     override fun getBoardgamegeekApi(): BoardgamegeekApi {
@@ -51,9 +51,7 @@ class DetailRepositoryImpl @Inject constructor(
                     }
                 }
             }
-
             override fun onFailure(p0: Call<Items>, p1: Throwable) {
-                Log.d(TAG, "onResponse onFailure: operation failed with item: ${p0.toString()}")
                 p1.printStackTrace()
             }
         })
