@@ -18,4 +18,7 @@ data class Ratings(
     @Path("bayesaverage")
     @Attribute(name = "value")
     val bayesAverageValue : String = "",
+    @Path("averageweight")
+    @Attribute(name = "value")
+    val averageWeightValue : String = "",
 )

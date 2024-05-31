@@ -1,4 +1,4 @@
-package com.example.twoforyou_boardgamedatabase.data.remote
+package com.example.twoforyou_boardgamedatabase.data.db.remote
 
 import com.example.twoforyou_boardgamedatabase.data.model.Item
 import com.example.twoforyou_boardgamedatabase.data.model.Items

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twoforyou_boardgamedatabase.data.model.Item
 import com.example.twoforyou_boardgamedatabase.data.model.Items
-import com.example.twoforyou_boardgamedatabase.data.remote.BoardgamegeekApi
+import com.example.twoforyou_boardgamedatabase.data.db.remote.BoardgamegeekApi
 import com.example.twoforyou_boardgamedatabase.domain.DetailRepository
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -20,6 +20,8 @@ processor = "0.8.15"
 processorCommon = "0.8.15"
 retrofit = "2.11.0"
 retrofitVersion = "2.9.0"
+roomKtx = "2.6.1"
+roomRuntime = "2.6.1"
 serialization="1.6.3"
 hiltAndroid = "2.49"
 hiltNavigationFragment = "1.2.0"
@@ -28,6 +30,9 @@ workRuntimeKtx = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+androidx-room-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 annotation = { module = "com.tickaroo.tikxml:annotation", version.ref = "annotation" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "com.tickaroo.tikxml:core", version.ref = "annotation" }

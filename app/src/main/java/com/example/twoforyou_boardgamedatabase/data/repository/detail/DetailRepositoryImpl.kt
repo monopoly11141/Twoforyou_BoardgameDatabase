@@ -9,7 +9,7 @@ import com.example.twoforyou_boardgamedatabase.data.model.Link
 import com.example.twoforyou_boardgamedatabase.data.model.Ranks
 import com.example.twoforyou_boardgamedatabase.data.model.Ratings
 import com.example.twoforyou_boardgamedatabase.data.model.Statistics
-import com.example.twoforyou_boardgamedatabase.data.remote.BoardgamegeekApi
+import com.example.twoforyou_boardgamedatabase.data.db.remote.BoardgamegeekApi
 import com.example.twoforyou_boardgamedatabase.domain.DetailRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,8 +34,8 @@ class DetailRepositoryImpl @Inject constructor(
         return retrofit.create(BoardgamegeekApi::class.java)
     }
 
-    override fun updateItems() {
-        val call = getBoardgamegeekApi().boardListPost("224517")
+    override fun updateItems(id: Int) {
+        val call = getBoardgamegeekApi().boardListPost(id.toString())
         call.enqueue(object : Callback<Items> {
             override fun onResponse(
                 call: Call<Items>,
@@ -45,6 +45,7 @@ class DetailRepositoryImpl @Inject constructor(
                     try {
                         Log.d(TAG, "onResponse: successful response, ${response.body()!!.item}")
                         _items.value = response.body()!!
+                        items.value.item.id = id
                     } catch (e: Exception) {
                         e.printStackTrace()
 

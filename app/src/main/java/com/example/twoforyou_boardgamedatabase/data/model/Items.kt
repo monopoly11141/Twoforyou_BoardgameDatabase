@@ -9,5 +9,4 @@ import com.tickaroo.tikxml.annotation.Xml
 data class Items(
     @Element(name="item")
     val item: Item = Item(),
-
 )

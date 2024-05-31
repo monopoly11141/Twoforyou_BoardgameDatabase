@@ -36,9 +36,11 @@ fun DetailScreen(
     val state by viewModel.state.collectAsState()
 
     viewModel.updateItems()
-    Column {
-        Text(text = state.items.item.name.toString())
-        Text(text = state.items.item.statistics.ratings.toString())
+    Column(
+        Modifier.verticalScroll(rememberScrollState())
+    ) {
+        Text(text = state.items.toString())
+//        Text(text = state.items.item.statistics.ratings.toString())
     }
 
 

@@ -8,5 +8,5 @@ import com.tickaroo.tikxml.annotation.Xml
 @Xml(name = "ranks")
 data class Ranks(
     @Element
-    var rank: List<Rank> = listOf(Rank()),
+    var rank: List<Rank> = listOf(Rank())
 )
