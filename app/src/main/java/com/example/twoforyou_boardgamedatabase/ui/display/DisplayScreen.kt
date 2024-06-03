@@ -1,5 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -36,6 +38,7 @@ fun DisplayScreen(
 ) {
     val state by viewModel.state.collectAsState()
     var dialogBoardgameUrl by remember { mutableStateOf("") }
+    var hasSuccesfullyAddedboardgame by remember { mutableStateOf(true) }
 
     var showDialog by remember { mutableStateOf(false) }
 
@@ -83,7 +86,7 @@ fun DisplayScreen(
 
                 Button(
                     onClick = {
-                        viewModel.insertItems(dialogBoardgameUrl.toInt())
+                        hasSuccesfullyAddedboardgame = viewModel.insertItems(dialogBoardgameUrl)
                         showDialog = false
                         dialogBoardgameUrl = ""
                     },
@@ -94,5 +97,11 @@ fun DisplayScreen(
                 }
             }
         }
+    }
+
+    if (!hasSuccesfullyAddedboardgame) {
+        Toast.makeText(LocalContext.current, "올바른 url을 입력하세요", Toast.LENGTH_SHORT).show()
+        hasSuccesfullyAddedboardgame = true
+
     }
 }

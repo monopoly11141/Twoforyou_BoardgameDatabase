@@ -1,6 +1,10 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
+import android.app.Application
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.material3.Snackbar
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
@@ -35,13 +39,21 @@ class DisplayViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
 
-    fun insertItems(id: Int) {
+    fun insertItems(url: String) : Boolean {
+        var id = -1
+        try {
+            id = url.substringAfter("boardgame/").substringBefore("/").toInt()
+        } catch(e: Exception) {
+            return false
+        }
+
         repository.getBoardgameItem(id, callback = {
             viewModelScope.launch {
                 repository.insertItemsToDb(boardgameItem = it)
 
             }
         })
+        return true
     }
 
 }
