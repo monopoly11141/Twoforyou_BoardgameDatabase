@@ -33,15 +33,7 @@ fun DetailScreen(
     navController: NavController,
     viewModel: DetailViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
 
-    viewModel.updateItems()
-    Column(
-        Modifier.verticalScroll(rememberScrollState())
-    ) {
-        Text(text = state.items.toString())
-//        Text(text = state.items.item.statistics.ratings.toString())
-    }
 
 
 }

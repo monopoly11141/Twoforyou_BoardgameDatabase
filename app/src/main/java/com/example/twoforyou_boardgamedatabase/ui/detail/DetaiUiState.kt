@@ -8,5 +8,6 @@ import com.example.twoforyou_boardgamedatabase.data.model.Ratings
 import com.example.twoforyou_boardgamedatabase.data.model.Statistics
 
 data class DetailUiState(
-    val items: Items = Items()
+    val a: String = ""
+
 )

@@ -3,6 +3,7 @@ package com.example.twoforyou_boardgamedatabase.data.db.local
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.data.model.Item
@@ -12,9 +13,9 @@ import kotlinx.coroutines.flow.Flow
 interface BoardgameDao {
 
     @Query("SELECT * FROM boardgame_database")
-    fun getAllBoardgame() : Flow<List<Item>>
+    fun getAllBoardgame() : Flow<List<BoardgameItem>>
 
-    @Insert()
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertBoardgame(boardgame: BoardgameItem)
 
     @Delete()

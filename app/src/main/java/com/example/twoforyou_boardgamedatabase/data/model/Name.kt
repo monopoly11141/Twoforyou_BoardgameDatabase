@@ -7,6 +7,6 @@ import com.tickaroo.tikxml.annotation.Xml
 data class Name(
     @Attribute(name = "type")
     var type: String = "",
-    @Attribute(name = "value") // name is optional, per default the field name will be used as name
+    @Attribute(name = "value")
     var value: String = ""
 )

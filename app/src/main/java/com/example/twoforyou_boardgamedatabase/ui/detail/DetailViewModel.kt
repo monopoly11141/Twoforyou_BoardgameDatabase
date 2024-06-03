@@ -23,24 +23,4 @@ class DetailViewModel @Inject constructor(
     private val repository: DetailRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(DetailUiState())
-    val state = combine(
-        repository.items,
-        _state
-    ) { array ->
-        DetailUiState(
-            items = array[0] as Items
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
-
-    fun updateItems() {
-        viewModelScope.launch {
-            repository.updateItems()
-        }
-        _state.update {
-            it.copy(
-                items = repository.items.value
-            )
-        }
-    }
 }

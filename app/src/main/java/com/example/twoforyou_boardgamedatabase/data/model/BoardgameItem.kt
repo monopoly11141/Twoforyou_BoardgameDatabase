@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "boardgame_database")
 data class BoardgameItem(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
 
-    val item: Item = Item()
+    var item: Item = Item()
 )

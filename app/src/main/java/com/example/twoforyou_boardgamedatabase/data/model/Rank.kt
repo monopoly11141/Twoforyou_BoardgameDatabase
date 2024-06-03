@@ -7,7 +7,7 @@ import com.tickaroo.tikxml.annotation.Xml
 data class Rank(
     @Attribute(name = "friendlyname")
     var friendlyName : String = "",
-    @Attribute(name = "value") // name is optional, per default the field name will be used as name
+    @Attribute(name = "value")
     var value: String = "",
     @Attribute(name = "bayesaverage")
     var bayesaverage: String = "",

@@ -1,5 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.di
 
+import com.example.twoforyou_boardgamedatabase.data.db.local.BoardgameDao
 import com.example.twoforyou_boardgamedatabase.data.repository.detail.DetailRepositoryImpl
 import com.example.twoforyou_boardgamedatabase.data.repository.display.DisplayRepositoryImpl
 import com.example.twoforyou_boardgamedatabase.domain.DetailRepository
@@ -17,13 +18,16 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesDisplayBoardgameRepository() : DisplayRepository {
-        return DisplayRepositoryImpl()
+    fun providesDisplayBoardgameRepository(
+        retrofit: Retrofit,
+        boardgameDao: BoardgameDao
+    ) : DisplayRepository {
+        return DisplayRepositoryImpl(retrofit, boardgameDao)
     }
 
     @Provides
     @Singleton
     fun providesAddBoardgameRepository(retrofit: Retrofit) : DetailRepository {
-        return DetailRepositoryImpl(retrofit)
+        return DetailRepositoryImpl()
     }
 }

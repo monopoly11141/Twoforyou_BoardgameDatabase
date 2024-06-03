@@ -22,39 +22,6 @@ import retrofit2.Retrofit
 import java.lang.Thread.State
 import javax.inject.Inject
 
-class DetailRepositoryImpl @Inject constructor(
-    private val retrofit: Retrofit
-) : DetailRepository {
+class DetailRepositoryImpl() : DetailRepository {
 
-    //private val _items = MutableStateFlow(Items(Item("")))
-    private val _items = MutableStateFlow(Items())
-    override val items: StateFlow<Items>
-        get() = _items.asStateFlow()
-    override fun getBoardgamegeekApi(): BoardgamegeekApi {
-        return retrofit.create(BoardgamegeekApi::class.java)
-    }
-
-    override fun updateItems(id: Int) {
-        val call = getBoardgamegeekApi().boardListPost(id.toString())
-        call.enqueue(object : Callback<Items> {
-            override fun onResponse(
-                call: Call<Items>,
-                response: Response<Items>
-            ) {
-                if(response.isSuccessful) {
-                    try {
-                        Log.d(TAG, "onResponse: successful response, ${response.body()!!.item}")
-                        _items.value = response.body()!!
-                        items.value.item.id = id
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-
-                    }
-                }
-            }
-            override fun onFailure(p0: Call<Items>, p1: Throwable) {
-                p1.printStackTrace()
-            }
-        })
-    }
 }

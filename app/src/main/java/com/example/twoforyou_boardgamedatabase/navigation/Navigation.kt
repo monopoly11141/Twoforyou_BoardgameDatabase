@@ -15,7 +15,7 @@ fun Navigation(
 
     NavHost(
         navController = navController,
-        startDestination = Screen.DetailScreen
+        startDestination = Screen.DisplayScreen
     ) {
         composable<Screen.DisplayScreen> {
             DisplayScreen(
