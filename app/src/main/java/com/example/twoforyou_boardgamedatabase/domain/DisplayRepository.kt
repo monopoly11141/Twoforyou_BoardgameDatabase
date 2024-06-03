@@ -11,6 +11,7 @@ interface DisplayRepository {
     fun getBoardgamegeekApi(): BoardgamegeekApi
 
     suspend fun insertItemsToDb(boardgameItem: BoardgameItem)
+    suspend fun deleteBoardgameItem(boardgameItem: BoardgameItem)
 
     fun getBoardgameItem(id: Int, callback: ResultCallback<BoardgameItem>)
     fun getAllBoardgameItem(): Flow<List<BoardgameItem>>

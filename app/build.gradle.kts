@@ -113,5 +113,8 @@ dependencies {
     // To use Kotlin annotation processing tool (kapt)
     kapt (libs.androidx.room.room.compiler)
 
+    //coil
+    implementation(libs.coil.compose)
+
 }
 

@@ -1,6 +1,7 @@
 [versions]
 agp = "8.4.0-rc02"
 annotation = "0.8.13"
+coilCompose = "2.6.0"
 converterGson = "2.9.0"
 jacksonDataformatXml = "2.17.1"
 jacksonModuleKotlin = "2.17.1"
@@ -34,6 +35,7 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx"
 androidx-room-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 annotation = { module = "com.tickaroo.tikxml:annotation", version.ref = "annotation" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "com.tickaroo.tikxml:core", version.ref = "annotation" }
 jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jacksonDataformatXml" }

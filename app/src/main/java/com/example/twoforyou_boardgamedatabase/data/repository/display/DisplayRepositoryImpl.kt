@@ -37,8 +37,11 @@ class DisplayRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertItemsToDb(boardgameItem: BoardgameItem) {
-        Log.d(TAG, "insertItemsToDb: $boardgameItem")
         boardgameDao.insertBoardgame(boardgameItem)
+    }
+
+    override suspend fun deleteBoardgameItem(boardgameItem: BoardgameItem) {
+        boardgameDao.deleteBoardgame(boardgameItem)
     }
 
     override fun getBoardgameItem(id: Int, callback: ResultCallback<BoardgameItem>) {

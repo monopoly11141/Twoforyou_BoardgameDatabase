@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.twoforyou_boardgamedatabase.ui.display.composable.Boardgame
 
 @Composable
 fun DisplayScreen(
@@ -60,7 +61,8 @@ fun DisplayScreen(
                 .padding(paddingValues)
         ) {
             items(state.boardgameItemList) { boardgameItem ->
-                Text(text = boardgameItem.item.name.toString())
+                Boardgame(boardgameItem)
+
                 Divider()
             }
 

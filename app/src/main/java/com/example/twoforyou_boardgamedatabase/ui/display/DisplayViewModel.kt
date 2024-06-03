@@ -7,7 +7,9 @@ import androidx.compose.material3.Snackbar
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.twoforyou_boardgamedatabase.data.db.local.BoardgameDb
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
+import com.example.twoforyou_boardgamedatabase.data.model.Name
 import com.example.twoforyou_boardgamedatabase.domain.DisplayRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,5 +57,33 @@ class DisplayViewModel @Inject constructor(
         })
         return true
     }
+
+    fun deleteBoardgameItem(boardgameItem: BoardgameItem) {
+        viewModelScope.launch {
+            repository.deleteBoardgameItem(boardgameItem)
+
+        }
+    }
+
+    fun pickName(nameList: List<Name>) : String {
+        return pickKoreanName(nameList) ?: nameList.filter { it.type == "primary" }[0].value
+    }
+
+    private fun pickKoreanName(nameList: List<Name>) : String? {
+        for(name in nameList) {
+            val koreanName = getKoreanName(name.value)
+            if(koreanName.isNotEmpty()) {
+                return koreanName
+            }
+        }
+        return null
+    }
+
+    private fun getKoreanName(nameString: String) : String {
+        return nameString.filter {
+            "^[ㄱ-ㅎ가-힣]*$".toRegex().containsMatchIn(it.toString())
+        }.replace("_", " ").trim()
+    }
+
 
 }
