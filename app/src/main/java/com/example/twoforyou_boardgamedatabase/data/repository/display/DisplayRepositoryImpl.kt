@@ -57,7 +57,21 @@ class DisplayRepositoryImpl @Inject constructor(
                     try {
                         Log.d(TAG, "onResponse: successful response, ${response.body()!!.item}")
                         items = response.body()!!
-                        boardgameItem.item = items.item
+                        val item = items.item
+
+                        boardgameItem.name = item.name.map {it.value}
+                        boardgameItem.imageUrl = item.imageUrl
+                        boardgameItem.description = item.description
+                        boardgameItem.linkValueList = item.link.map {it.value}
+                        boardgameItem.averageValue = item.statistics.ratings.averageValue.toFloat()
+                        boardgameItem.bayesAverageValue = item.statistics.ratings.bayesAverageValue.toFloat()
+                        boardgameItem.maxPlayTimeValue = item.maxPlayTimeValue.toInt()
+                        boardgameItem.minPlayTimeValue = item.minPlayTimeValue.toInt()
+                        boardgameItem.maxPlayersValue = item.maxPlayersValue.toInt()
+                        boardgameItem.minPlayersValue = item.minPlayersValue.toInt()
+                        boardgameItem.numUsersRated = item.statistics.ratings.usersRatedValue.toInt()
+                        boardgameItem.ranking = item.statistics.ratings.ranks.rank.filter {it.friendlyName == "Board Game Rank"}[0].value.toInt()
+
                         callback.onReceiveResult(boardgameItem)
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -69,6 +83,10 @@ class DisplayRepositoryImpl @Inject constructor(
             }
         })
 
+    }
+
+    override fun getNameMatches(searchString: String): Flow<List<BoardgameItem>> {
+        return boardgameDao.searchNameMatches(searchString)
     }
 
     override fun getAllBoardgameItem(): Flow<List<BoardgameItem>> {

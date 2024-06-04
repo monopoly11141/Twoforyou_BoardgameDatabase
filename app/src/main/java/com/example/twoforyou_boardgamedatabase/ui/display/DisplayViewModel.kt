@@ -4,6 +4,10 @@ import android.app.Application
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.material3.Snackbar
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,13 +34,17 @@ class DisplayViewModel @Inject constructor(
     private val repository: DisplayRepository
 ) : ViewModel() {
 
+    var searchString by mutableStateOf("")
+
     private val _state = MutableStateFlow(DisplayUiState())
     val state = combine(
         repository.getAllBoardgameItem(),
+        repository.getNameMatches(searchString),
         _state
     ) { array ->
         DisplayUiState(
-            boardgameItemList = array[0] as List<BoardgameItem>
+            boardgameItemList = array[0] as List<BoardgameItem>,
+            searchedBoardgameItemList = array[1] as List<BoardgameItem>
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
 
@@ -65,15 +73,29 @@ class DisplayViewModel @Inject constructor(
         }
     }
 
-    fun pickName(nameList: List<Name>) : String {
-        return pickKoreanName(nameList) ?: nameList.filter { it.type == "primary" }[0].value
+    fun pickName(nameList: List<String>) : String {
+        pickKoreanName(nameList)?.let { index ->
+            return nameList[index]
+        }
+        return nameList[0]
     }
 
-    private fun pickKoreanName(nameList: List<Name>) : String? {
-        for(name in nameList) {
-            val koreanName = getKoreanName(name.value)
+    fun searchForBoardgame(searchString: String) {
+        this.searchString = searchString
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    searchedBoardgameItemList = repository.getNameMatches(searchString).flattenToList()
+                )
+            }
+        }
+    }
+
+    private fun pickKoreanName(nameList: List<String>) : Int? {
+        for(i in nameList.indices) {
+            val koreanName = getKoreanName(nameList[i])
             if(koreanName.isNotEmpty()) {
-                return koreanName
+                return i
             }
         }
         return null
@@ -84,6 +106,8 @@ class DisplayViewModel @Inject constructor(
             "^[ㄱ-ㅎ가-힣]*$".toRegex().containsMatchIn(it.toString())
         }.replace("_", " ").trim()
     }
-
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun <T> Flow<List<T>>.flattenToList() =
+        flatMapConcat { it.asFlow() }.toList()
 
 }

@@ -3,6 +3,7 @@ package com.example.twoforyou_boardgamedatabase.ui.display
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -40,6 +41,7 @@ fun DisplayScreen(
     val state by viewModel.state.collectAsState()
     var dialogBoardgameUrl by remember { mutableStateOf("") }
     var hasSuccesfullyAddedboardgame by remember { mutableStateOf(true) }
+    var searchString by remember { mutableStateOf("") }
 
     var showDialog by remember { mutableStateOf(false) }
 
@@ -55,18 +57,44 @@ fun DisplayScreen(
             }
         }
     ) { paddingValues ->
-        LazyColumn(
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            items(state.boardgameItemList) { boardgameItem ->
-                Boardgame(boardgameItem)
+            TextField(
+                value = searchString,
+                onValueChange = { search ->
+                    searchString = search
+                    viewModel.searchForBoardgame(searchString)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                if(searchString.isBlank()) {
+                    items(state.boardgameItemList) { boardgameItem ->
+                        Boardgame(boardgameItem)
 
-                Divider()
+                        Divider()
+                    }
+                }else {
+                    items(state.searchedBoardgameItemList) { boardgameItem ->
+                        Boardgame(boardgameItem)
+
+                        Divider()
+                    }
+                }
+
+
+
             }
-
         }
+
 
     }
 

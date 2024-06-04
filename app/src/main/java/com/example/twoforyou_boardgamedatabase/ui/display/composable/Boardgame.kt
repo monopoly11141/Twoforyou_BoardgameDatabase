@@ -31,7 +31,7 @@ fun Boardgame(
 
     ) {
         Text(
-            text = viewModel.pickName(boardgameItem.item.name),
+            text = viewModel.pickName(boardgameItem.name),
             modifier = Modifier
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
@@ -43,7 +43,7 @@ fun Boardgame(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             AsyncImage(
-                model = boardgameItem.item.imageUrl,
+                model = boardgameItem.imageUrl,
                 contentDescription = "보드게임 이미지",
                 modifier = Modifier
                     .size(100.dp)
