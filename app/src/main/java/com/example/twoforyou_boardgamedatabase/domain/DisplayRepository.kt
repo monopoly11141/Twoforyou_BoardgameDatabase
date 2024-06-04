@@ -15,6 +15,4 @@ interface DisplayRepository {
 
     fun getBoardgameItem(id: Int, callback: ResultCallback<BoardgameItem>)
     fun getAllBoardgameItem(): Flow<List<BoardgameItem>>
-
-    fun getNameMatches(searchString: String) : Flow<List<BoardgameItem>>
 }

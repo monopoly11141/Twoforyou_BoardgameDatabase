@@ -13,12 +13,21 @@ import com.example.twoforyou_boardgamedatabase.data.db.remote.BoardgamegeekApi
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.data.model.Items
 import com.example.twoforyou_boardgamedatabase.domain.DisplayRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.forEach
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import okhttp3.internal.notify
 import okhttp3.internal.wait
 import retrofit2.Call
@@ -85,12 +94,12 @@ class DisplayRepositoryImpl @Inject constructor(
 
     }
 
-    override fun getNameMatches(searchString: String): Flow<List<BoardgameItem>> {
-        return boardgameDao.searchNameMatches(searchString)
-    }
-
     override fun getAllBoardgameItem(): Flow<List<BoardgameItem>> {
         return boardgameDao.getAllBoardgame()
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun <T> Flow<List<T>>.flattenToList() =
+        flatMapConcat { it.asFlow() }.toList()
 
 }

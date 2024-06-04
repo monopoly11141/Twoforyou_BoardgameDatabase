@@ -27,7 +27,4 @@ interface BoardgameDao {
     @Query("SELECT * FROM boardgame_database WHERE id = :id LIMIT 1")
     suspend fun getBoardgameById(id: Int): BoardgameItem
 
-    @Query("SELECT * FROM boardgame_database WHERE name LIKE :searchString")
-    fun searchNameMatches(searchString: String?) : Flow<List<BoardgameItem>>
-
 }

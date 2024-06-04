@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 data class DisplayUiState(
-    val boardgameItemList: List<BoardgameItem> = emptyList(),
+    var boardgameItemList: List<BoardgameItem> = emptyList(),
     val searchedBoardgameItemList: List<BoardgameItem> = emptyList()
 )
