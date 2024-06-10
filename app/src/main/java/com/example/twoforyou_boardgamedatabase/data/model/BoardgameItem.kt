@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 data class BoardgameItem(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-    var name: List<String> = emptyList(),
+    var koreanName : String = "",
+    var englishName : String = "",
     var description: String = "",
     var imageUrl: String = "",
     var minPlayersValue : Int = 0,

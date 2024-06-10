@@ -12,7 +12,10 @@ interface DisplayRepository {
 
     suspend fun insertItemsToDb(boardgameItem: BoardgameItem)
     suspend fun deleteBoardgameItem(boardgameItem: BoardgameItem)
+    suspend fun updateBoardgameItem(boardgameItem: BoardgameItem)
 
     fun getBoardgameItem(id: Int, callback: ResultCallback<BoardgameItem>)
     fun getAllBoardgameItem(): Flow<List<BoardgameItem>>
+    fun getBoardgameFromKeyword(keyword: String) : Flow<List<BoardgameItem>>
+
 }

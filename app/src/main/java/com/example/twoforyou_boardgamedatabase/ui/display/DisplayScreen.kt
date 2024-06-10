@@ -1,5 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -67,7 +68,7 @@ fun DisplayScreen(
                 value = searchString,
                 onValueChange = { search ->
                     searchString = search
-                    viewModel.searchForBoardgame(searchString)
+                    viewModel.getBoardgameFromKeyword(search)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -84,6 +85,7 @@ fun DisplayScreen(
                     }
                 }else {
                     items(state.searchedBoardgameItemList) { boardgameItem ->
+                        Log.d("TAG", "DisplayScreen: Updated : ${boardgameItem.englishName}")
                         Boardgame(boardgameItem)
 
                         Divider()

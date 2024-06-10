@@ -68,7 +68,12 @@ class DisplayRepositoryImpl @Inject constructor(
                         items = response.body()!!
                         val item = items.item
 
-                        boardgameItem.name = item.name.map {it.value}
+                        boardgameItem.koreanName = getKoreanName(item.name.map {
+                            it.value
+                        })
+                        boardgameItem.englishName = getEnglishName(item.name.map {
+                            it.value
+                        })
                         boardgameItem.imageUrl = item.imageUrl
                         boardgameItem.description = item.description
                         boardgameItem.linkValueList = item.link.map {it.value}
@@ -94,12 +99,37 @@ class DisplayRepositoryImpl @Inject constructor(
 
     }
 
+    override suspend fun updateBoardgameItem(boardgameItem: BoardgameItem) {
+        boardgameDao.updateBoardgame(boardgameItem)
+    }
+
     override fun getAllBoardgameItem(): Flow<List<BoardgameItem>> {
         return boardgameDao.getAllBoardgame()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun <T> Flow<List<T>>.flattenToList() =
-        flatMapConcat { it.asFlow() }.toList()
+    override fun getBoardgameFromKeyword(keyword: String): Flow<List<BoardgameItem>> {
+        return boardgameDao.getBoardgameFromKeyword("$keyword")
+    }
+
+    private fun getKoreanName(nameList: List<String>): String {
+        for(koreanName in nameList) {
+            if (filterKoreanFromString(koreanName).isNotEmpty()) {
+                return koreanName
+            }
+        }
+        return ""
+    }
+
+    //English name always appears at [0] from api.
+    private fun getEnglishName(nameList: List<String>) : String {
+        return nameList[0]
+    }
+
+
+    private fun filterKoreanFromString(nameString: String): String {
+        return nameString.filter {
+            "^[ㄱ-ㅎ가-힣]*$".toRegex().containsMatchIn(it.toString())
+        }.replace("_", " ").trim()
+    }
 
 }

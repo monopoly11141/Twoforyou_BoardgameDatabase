@@ -27,12 +27,11 @@ class DisplayViewModel @Inject constructor(
     private val repository: DisplayRepository
 ) : ViewModel() {
 
-    var searchString by mutableStateOf("")
-
+    var keyword by mutableStateOf("")
     private val _state = MutableStateFlow(DisplayUiState())
     val state = combine(
         repository.getAllBoardgameItem(),
-        flowOf(searchForBoardgame("")),
+        repository.getBoardgameFromKeyword(keyword),
         _state
     ) { array ->
         DisplayUiState(
@@ -66,45 +65,14 @@ class DisplayViewModel @Inject constructor(
         }
     }
 
-    fun pickName(nameList: List<String>): String {
-        pickKoreanName(nameList)?.let { index ->
-            return nameList[index]
-        }
-        return nameList[0]
+    fun getBoardgameFromKeyword(keyword: String) {
+        this.keyword = keyword
     }
 
-    fun searchForBoardgame(searchString: String): List<BoardgameItem> {
+    fun editBoardgameItem(boardgameItem: BoardgameItem) {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    searchedBoardgameItemList = repository.getAllBoardgameItem().flattenToList()
-                        .filter { boardgame ->
-                            boardgame.name.contains(searchString)
-                        }
-                )
-            }
+            repository.updateBoardgameItem(boardgameItem)
         }
-        return state.value.searchedBoardgameItemList
     }
-
-    private fun pickKoreanName(nameList: List<String>): Int? {
-        for (i in nameList.indices) {
-            val koreanName = getKoreanName(nameList[i])
-            if (koreanName.isNotEmpty()) {
-                return i
-            }
-        }
-        return null
-    }
-
-    private fun getKoreanName(nameString: String): String {
-        return nameString.filter {
-            "^[ㄱ-ㅎ가-힣]*$".toRegex().containsMatchIn(it.toString())
-        }.replace("_", " ").trim()
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun <T> Flow<List<T>>.flattenToList() =
-        flatMapConcat { it.asFlow() }.toList()
 
 }
