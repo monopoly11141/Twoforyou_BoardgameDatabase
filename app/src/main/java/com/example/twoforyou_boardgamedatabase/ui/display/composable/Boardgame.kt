@@ -92,6 +92,7 @@ fun Boardgame(
     }
 
     if (showEditBoardgameDialog) {
+        editBoardgameDialogKoreanName = boardgameItem.koreanName
         Dialog(onDismissRequest = { showEditBoardgameDialog = false }) {
             Column(
                 modifier = Modifier
@@ -128,6 +129,7 @@ fun Boardgame(
                         onClick = {
                             boardgameItem.koreanName = editBoardgameDialogKoreanName
                             viewModel.editBoardgameItem(boardgameItem)
+                            editBoardgameDialogKoreanName = ""
                             showEditBoardgameDialog = false
                         },
                         modifier = Modifier

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BoardgameDao {
 
-    @Query("SELECT * FROM boardgame_database ORDER BY koreanName ASC")
+    @Query("SELECT * FROM boardgame_database ORDER BY koreanName ASC, englishName ASC")
     fun getAllBoardgame(): Flow<List<BoardgameItem>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

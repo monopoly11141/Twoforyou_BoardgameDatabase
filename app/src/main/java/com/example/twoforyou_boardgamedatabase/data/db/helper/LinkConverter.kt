@@ -4,14 +4,14 @@ import androidx.room.TypeConverter
 import com.example.twoforyou_boardgamedatabase.data.model.Link
 import com.google.gson.Gson
 
-class LinkValueListConverter {
+class LinkConverter {
     @TypeConverter
-    fun listToJson(value: List<String>?): String? {
+    fun linkToJson(value: Link?): String? {
         return Gson().toJson(value)
     }
 
     @TypeConverter
-    fun jsonToList(value: String): List<String>? {
-        return Gson().fromJson(value, Array<String>::class.java)?.toList()
+    fun jsonToLink(value: String): Link? {
+        return Gson().fromJson(value, Link::class.java)
     }
 }
