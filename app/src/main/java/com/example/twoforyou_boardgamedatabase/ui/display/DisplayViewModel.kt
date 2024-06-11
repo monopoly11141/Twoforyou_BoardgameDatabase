@@ -1,24 +1,16 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.domain.DisplayRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,11 +19,11 @@ class DisplayViewModel @Inject constructor(
     private val repository: DisplayRepository
 ) : ViewModel() {
 
-    var keyword by mutableStateOf("")
+    var keyword = mutableStateOf("")
     private val _state = MutableStateFlow(DisplayUiState())
     val state = combine(
         repository.getAllBoardgameItem(),
-        repository.getBoardgameFromKeyword(keyword),
+        repository.getBoardgameFromKeyword(keyword.value),
         _state
     ) { array ->
         DisplayUiState(
@@ -39,7 +31,6 @@ class DisplayViewModel @Inject constructor(
             searchedBoardgameItemList = array[1] as List<BoardgameItem>
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
-
 
     fun insertItems(url: String): Boolean {
         var id = -1
@@ -65,14 +56,15 @@ class DisplayViewModel @Inject constructor(
         }
     }
 
-    fun getBoardgameFromKeyword(keyword: String) {
-        this.keyword = keyword
-    }
-
     fun editBoardgameItem(boardgameItem: BoardgameItem) {
         viewModelScope.launch {
             repository.updateBoardgameItem(boardgameItem)
         }
+    }
+
+    fun searchBoardgame(searchQuery: String): Flow<List<BoardgameItem>> {
+        return repository.getBoardgameFromKeyword(searchQuery)
+
     }
 
 }

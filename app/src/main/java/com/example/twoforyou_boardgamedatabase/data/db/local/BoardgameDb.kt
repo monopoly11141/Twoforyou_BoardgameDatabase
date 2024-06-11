@@ -3,7 +3,6 @@ package com.example.twoforyou_boardgamedatabase.data.db.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.twoforyou_boardgamedatabase.data.db.helper.LinkConverter
 import com.example.twoforyou_boardgamedatabase.data.db.helper.LinkValueListConverter
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 
@@ -13,8 +12,7 @@ import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
     exportSchema = false
 )
 @TypeConverters(
-    LinkValueListConverter::class,
-    LinkConverter::class
+    LinkValueListConverter::class
 )
 abstract class BoardgameDb : RoomDatabase() {
     abstract val boardgameDao: BoardgameDao

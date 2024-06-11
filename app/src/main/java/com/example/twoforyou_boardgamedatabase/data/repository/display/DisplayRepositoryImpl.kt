@@ -3,6 +3,7 @@ package com.example.twoforyou_boardgamedatabase.data.repository.display
 import android.content.ContentValues.TAG
 import android.service.carrier.CarrierMessagingService.ResultCallback
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import com.example.twoforyou_boardgamedatabase.data.db.local.BoardgameDao
 import com.example.twoforyou_boardgamedatabase.data.db.remote.BoardgamegeekApi
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
@@ -93,7 +94,7 @@ class DisplayRepositoryImpl @Inject constructor(
     }
 
     override fun getBoardgameFromKeyword(keyword: String): Flow<List<BoardgameItem>> {
-        return boardgameDao.getBoardgameFromKeyword("$keyword")
+        return boardgameDao.getBoardgameFromKeyword(keyword)
     }
 
     private fun getKoreanName(nameList: List<String>): String {

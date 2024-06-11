@@ -9,7 +9,6 @@ plugins {
 android {
     namespace = "com.example.twoforyou_boardgamedatabase"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.example.twoforyou_boardgamedatabase"
         minSdk = 24
