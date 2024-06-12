@@ -9,6 +9,5 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
 
 data class DisplayUiState(
-    var boardgameItemList: List<BoardgameItem> = emptyList(),
-    var searchedBoardgameItemList: List<BoardgameItem> = emptyList()
+    var boardgameItemList: List<BoardgameItem> = emptyList()
 )

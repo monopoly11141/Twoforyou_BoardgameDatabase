@@ -31,12 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.ui.display.composable.Boardgame
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun DisplayScreen(
@@ -72,7 +68,7 @@ fun DisplayScreen(
                 value = searchString,
                 onValueChange = { searchQuery ->
                     searchString = searchQuery
-                    viewModel.searchBoardgame(searchQuery)
+                    viewModel.searchBoardgame(searchString)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -81,24 +77,19 @@ fun DisplayScreen(
                 modifier = Modifier
                     .weight(1f)
             ) {
-                if(searchString.isBlank()) {
+                if (searchString.isBlank()) {
                     items(state.boardgameItemList) { boardgameItem ->
                         Boardgame(boardgameItem)
 
                         Divider()
                     }
-                }else {
-
-                    Log.d("TAG", "DisplayScreen: ${state.searchedBoardgameItemList}")
-                    items(state.searchedBoardgameItemList) { boardgameItem ->
-                        Log.d("TAG", "DisplayScreen: Updated : ${boardgameItem.englishName}")
+                } else {
+                    items(viewModel.searchedBoardgame) { boardgameItem ->
                         Boardgame(boardgameItem)
 
                         Divider()
                     }
                 }
-
-
 
             }
         }
