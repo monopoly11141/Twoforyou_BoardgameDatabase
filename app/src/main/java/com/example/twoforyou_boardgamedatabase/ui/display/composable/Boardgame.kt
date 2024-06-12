@@ -1,5 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.ui.display.composable
 
+import android.icu.text.DecimalFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -31,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
+import java.math.RoundingMode
 
 @Composable
 fun Boardgame(
@@ -49,6 +53,24 @@ fun Boardgame(
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
+        val df = DecimalFormat("#.###")
+        df.roundingMode = RoundingMode.CEILING.ordinal
+
+        Text(
+            text = "평점 : ${df.format(boardgameItem.bayesAverageValue)}"
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            LazyRow {
+                items(boardgameItem.linkValueList) { value ->
+                    Text(value + " / ")
+                }
+            }
+        }
 
         Row(
             modifier = Modifier
