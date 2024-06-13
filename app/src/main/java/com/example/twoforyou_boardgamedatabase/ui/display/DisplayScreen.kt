@@ -1,10 +1,10 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -28,7 +29,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -43,8 +46,15 @@ fun DisplayScreen(
     var dialogBoardgameUrl by remember { mutableStateOf("") }
     var hasSuccesfullyAddedboardgame by remember { mutableStateOf(true) }
     var searchString by remember { mutableStateOf("") }
+    var boardgameListDisplay by remember { mutableStateOf(state.boardgameItemList) }
 
     var showDialog by remember { mutableStateOf(false) }
+
+    boardgameListDisplay = if (searchString.isBlank()) {
+        state.boardgameItemList
+    } else {
+        viewModel.searchedBoardgame
+    }
 
     Scaffold(
         floatingActionButton =
@@ -52,9 +62,11 @@ fun DisplayScreen(
             ExtendedFloatingActionButton(
                 onClick = { showDialog = true },
                 shape = CircleShape,
+                modifier = Modifier
+                    .imePadding()
             ) {
-                Icon(imageVector = Icons.Filled.Edit, contentDescription = "추가 아이콘")
-                Text("보드게임 추가하기")
+                Icon(imageVector = Icons.Filled.Edit, contentDescription = "추가")
+                Text("보드게임 추가")
             }
         }
     ) { paddingValues ->
@@ -70,6 +82,9 @@ fun DisplayScreen(
                     searchString = searchQuery
                     viewModel.searchBoardgame(searchString)
                 },
+                trailingIcon = {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "검색")
+                },
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -77,19 +92,16 @@ fun DisplayScreen(
                 modifier = Modifier
                     .weight(1f)
             ) {
-                if (searchString.isBlank()) {
-                    items(state.boardgameItemList) { boardgameItem ->
-                        Boardgame(boardgameItem)
+                items(boardgameListDisplay) { boardgameItem ->
 
-                        Divider()
-                    }
-                } else {
-                    items(viewModel.searchedBoardgame) { boardgameItem ->
-                        Boardgame(boardgameItem)
+                    Boardgame(boardgameItem)
 
-                        Divider()
-                    }
+                    Divider(
+                        thickness = 2.dp,
+                        color = Color.Black
+                    )
                 }
+
 
             }
         }

@@ -4,13 +4,16 @@ import android.icu.text.DecimalFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -26,16 +29,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
 import java.math.RoundingMode
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Boardgame(
     boardgameItem: BoardgameItem,
@@ -44,72 +55,119 @@ fun Boardgame(
     var showDeleteBoardgameDialog by remember { mutableStateOf(false) }
     var showEditBoardgameDialog by remember { mutableStateOf(false) }
     var editBoardgameDialogKoreanName by remember { mutableStateOf(boardgameItem.koreanName) }
+
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(boardgameItem.imageUrl)
+            .build(),
+        contentScale = ContentScale.Fit
+    )
+
     Column(
-
+        modifier = Modifier
+            .paint(
+                painter,
+                contentScale = ContentScale.Fit,
+                alpha = 0.2f,
+                alignment = Alignment.CenterEnd
+            )
     ) {
-        Text(
-            text = boardgameItem.koreanName.ifBlank { boardgameItem.englishName },
-            modifier = Modifier
-                .fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-        val df = DecimalFormat("#.###")
-        df.roundingMode = RoundingMode.CEILING.ordinal
-
-        Text(
-            text = "평점 : ${df.format(boardgameItem.bayesAverageValue)}"
-        )
 
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Bottom
         ) {
-            LazyRow {
-                items(boardgameItem.linkValueList) { value ->
-                    Text(value + " / ")
-                }
-            }
+            Text(
+                text = boardgameItem.koreanName.ifBlank { boardgameItem.englishName },
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
         }
 
-        Row(
+        Spacer(
             modifier = Modifier
-                .fillMaxSize(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
+                .fillMaxWidth()
+                .height(4.dp)
+        )
+
+        Row(
+
         ) {
             AsyncImage(
                 model = boardgameItem.imageUrl,
                 contentDescription = "보드게임 이미지",
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(140.dp)
                     .padding(5.dp)
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                IconButton(
-                    onClick = { showEditBoardgameDialog = true },
-                    modifier = Modifier
-                        .align(Alignment.Bottom)
-                ) {
-                    Icon(imageVector = Icons.Filled.Edit, contentDescription = "수정하기")
-                }
+            Column(
 
-                IconButton(
-                    onClick = { showDeleteBoardgameDialog = true },
+            ) {
+
+                Text(
+                    text = "보드게임긱 순위 : ${boardgameItem.ranking} 위"
+                )
+
+                Text(
+                    text = "인원 : ${boardgameItem.minPlayersValue}~${boardgameItem.maxPlayersValue} 명"
+                )
+
+                val df = DecimalFormat("#.###")
+                df.roundingMode = RoundingMode.CEILING.ordinal
+                Text(
+                    text = "평점 : ${df.format(boardgameItem.bayesAverageValue)}"
+                )
+
+                Text(
+                    text = "플레이 시간 : ${boardgameItem.minPlayTimeValue}~${boardgameItem.maxPlayTimeValue} 분"
+                )
+
+                Row(
                     modifier = Modifier
-                        .align(Alignment.Bottom)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.Bottom
                 ) {
-                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "삭제하기")
+
+                    IconButton(
+                        onClick = { showEditBoardgameDialog = true },
+                        modifier = Modifier
+                            .align(Alignment.Bottom)
+                    ) {
+                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "수정하기")
+                    }
+
+                    IconButton(
+                        onClick = { showDeleteBoardgameDialog = true },
+                        modifier = Modifier
+                            .align(Alignment.Bottom)
+                    ) {
+                        Icon(imageVector = Icons.Filled.Delete, contentDescription = "삭제하기")
+                    }
+
+
                 }
             }
 
         }
+
+        FlowRow(
+            modifier = Modifier
+                .padding(horizontal = 4.dp)
+        ) {
+            boardgameItem.linkValueList.forEach { mechanism ->
+                BoardgameMechanismItem(mechanism)
+                Spacer(
+                    modifier = Modifier
+                        .width(2.dp)
+                )
+            }
+        }
+
 
     }
 

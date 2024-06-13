@@ -17,7 +17,7 @@ data class Item(
     @PropertyElement(name = "description")
     var description: String = "",
 
-    @PropertyElement(name = "image")
+    @PropertyElement(name = "thumbnail")
     var imageUrl: String = "",
 
     @Path("minplayers")
