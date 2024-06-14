@@ -1,6 +1,7 @@
 package com.example.twoforyou_boardgamedatabase.ui.display.composable
 
 import android.icu.text.DecimalFormat
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -46,39 +48,36 @@ import coil.request.ImageRequest
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
 import java.math.RoundingMode
+import kotlin.math.log
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Boardgame(
-    boardgameItem: BoardgameItem,
-    viewModel: DisplayViewModel = hiltViewModel()
+    boardgameItem: BoardgameItem, viewModel: DisplayViewModel = hiltViewModel()
 ) {
+
     var showDeleteBoardgameDialog by remember { mutableStateOf(false) }
     var showEditBoardgameDialog by remember { mutableStateOf(false) }
     var isFavoriteClicked by remember { mutableStateOf(false) }
     var editBoardgameDialogKoreanName by remember { mutableStateOf(boardgameItem.koreanName) }
-    var favoriteImageVector by remember { mutableStateOf(Icons.Filled.FavoriteBorder) }
+    var favoriteImageVector by remember { mutableStateOf(getFavoriteImageVector(boardgameItem)) }
 
     val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(boardgameItem.imageUrl)
-            .build(),
+        model = ImageRequest.Builder(LocalContext.current).data(boardgameItem.imageUrl).build(),
         contentScale = ContentScale.Fit
     )
 
     Column(
-        modifier = Modifier
-            .paint(
-                painter,
-                contentScale = ContentScale.Fit,
-                alpha = 0.2f,
-                alignment = Alignment.CenterEnd
-            )
+        modifier = Modifier.paint(
+            painter,
+            contentScale = ContentScale.Fit,
+            alpha = 0.2f,
+            alignment = Alignment.CenterEnd
+        )
     ) {
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -130,32 +129,28 @@ fun Boardgame(
                 )
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.Bottom
                 ) {
 
                     IconButton(
                         onClick = { isFavoriteClicked = !isFavoriteClicked },
-                        modifier = Modifier
-                            .align(Alignment.Bottom)
+                        modifier = Modifier.align(Alignment.Bottom)
                     ) {
-                        Icon(imageVector = favoriteImageVector, contentDescription = "삭제하기")
+                        Icon(imageVector = favoriteImageVector, contentDescription = "즐겨찾기")
                     }
 
                     IconButton(
                         onClick = { showEditBoardgameDialog = true },
-                        modifier = Modifier
-                            .align(Alignment.Bottom)
+                        modifier = Modifier.align(Alignment.Bottom)
                     ) {
                         Icon(imageVector = Icons.Filled.Edit, contentDescription = "수정하기")
                     }
 
                     IconButton(
                         onClick = { showDeleteBoardgameDialog = true },
-                        modifier = Modifier
-                            .align(Alignment.Bottom)
+                        modifier = Modifier.align(Alignment.Bottom)
                     ) {
                         Icon(imageVector = Icons.Filled.Delete, contentDescription = "삭제하기")
                     }
@@ -167,37 +162,23 @@ fun Boardgame(
         }
 
         FlowRow(
-            modifier = Modifier
-                .padding(horizontal = 4.dp)
+            modifier = Modifier.padding(horizontal = 4.dp)
         ) {
             boardgameItem.linkValueList.forEach { mechanism ->
                 BoardgameMechanismItem(mechanism)
                 Spacer(
-                    modifier = Modifier
-                        .width(2.dp)
+                    modifier = Modifier.width(2.dp)
                 )
             }
         }
     }
 
     if (isFavoriteClicked) {
-        favoriteImageVector = Icons.Filled.Favorite
-    } else {
-        favoriteImageVector = Icons.Filled.FavoriteBorder
-    }
-
-    if (favoriteImageVector == Icons.Filled.FavoriteBorder) {
-        boardgameItem.isFavorite = false
+        boardgameItem.isFavorite = !boardgameItem.isFavorite
+        favoriteImageVector = getFavoriteImageVector(boardgameItem)
         viewModel.editBoardgameItem(boardgameItem)
+        isFavoriteClicked = false
     }
-
-    if (favoriteImageVector == Icons.Filled.Favorite) {
-        boardgameItem.isFavorite = true
-        viewModel.editBoardgameItem(boardgameItem)
-    }
-
-
-
 
     if (showEditBoardgameDialog) {
         editBoardgameDialogKoreanName = boardgameItem.koreanName
@@ -210,16 +191,11 @@ fun Boardgame(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "한국어 제목 추가/수정",
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
+                    text = "한국어 제목 추가/수정", modifier = Modifier.padding(vertical = 4.dp)
                 )
-                TextField(
-                    value = editBoardgameDialogKoreanName,
-                    onValueChange = { newKoreanName ->
-                        editBoardgameDialogKoreanName = newKoreanName
-                    }
-                )
+                TextField(value = editBoardgameDialogKoreanName, onValueChange = { newKoreanName ->
+                    editBoardgameDialogKoreanName = newKoreanName
+                })
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
@@ -227,9 +203,7 @@ fun Boardgame(
                     Button(
                         onClick = {
                             showEditBoardgameDialog = false
-                        },
-                        modifier = Modifier
-                            .weight(0.5f)
+                        }, modifier = Modifier.weight(0.5f)
                     ) {
                         Text(text = "취소")
                     }
@@ -239,9 +213,7 @@ fun Boardgame(
                             viewModel.editBoardgameItem(boardgameItem)
                             editBoardgameDialogKoreanName = ""
                             showEditBoardgameDialog = false
-                        },
-                        modifier = Modifier
-                            .weight(0.5f)
+                        }, modifier = Modifier.weight(0.5f)
                     ) {
                         Text(text = "수정")
                     }
@@ -269,9 +241,7 @@ fun Boardgame(
                     Button(
                         onClick = {
                             showDeleteBoardgameDialog = false
-                        },
-                        modifier = Modifier
-                            .weight(0.5f)
+                        }, modifier = Modifier.weight(0.5f)
                     ) {
                         Text(text = "아니요.")
                     }
@@ -279,9 +249,7 @@ fun Boardgame(
                         onClick = {
                             viewModel.deleteBoardgameItem(boardgameItem)
                             showDeleteBoardgameDialog = false
-                        },
-                        modifier = Modifier
-                            .weight(0.5f)
+                        }, modifier = Modifier.weight(0.5f)
                     ) {
                         Text(text = "네.")
                     }
@@ -291,8 +259,11 @@ fun Boardgame(
 
         }
     }
+}
 
-
+private fun getFavoriteImageVector(boardgameItem: BoardgameItem): ImageVector {
+    return if (boardgameItem.isFavorite) Icons.Filled.Favorite
+    else Icons.Filled.FavoriteBorder
 }
 
 
