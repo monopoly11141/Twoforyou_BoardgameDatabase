@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,7 +55,9 @@ fun Boardgame(
 ) {
     var showDeleteBoardgameDialog by remember { mutableStateOf(false) }
     var showEditBoardgameDialog by remember { mutableStateOf(false) }
+    var isFavoriteClicked by remember { mutableStateOf(false) }
     var editBoardgameDialogKoreanName by remember { mutableStateOf(boardgameItem.koreanName) }
+    var favoriteImageVector by remember { mutableStateOf(Icons.Filled.FavoriteBorder) }
 
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
@@ -109,7 +112,7 @@ fun Boardgame(
             ) {
 
                 Text(
-                    text = "보드게임긱 순위 : ${boardgameItem.ranking} 위"
+                    text = "긱 순위 : ${boardgameItem.ranking} 위"
                 )
 
                 Text(
@@ -123,7 +126,7 @@ fun Boardgame(
                 )
 
                 Text(
-                    text = "플레이 시간 : ${boardgameItem.minPlayTimeValue}~${boardgameItem.maxPlayTimeValue} 분"
+                    text = "시간 : ${boardgameItem.minPlayTimeValue}~${boardgameItem.maxPlayTimeValue} 분"
                 )
 
                 Row(
@@ -132,6 +135,14 @@ fun Boardgame(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.Bottom
                 ) {
+
+                    IconButton(
+                        onClick = { isFavoriteClicked = !isFavoriteClicked },
+                        modifier = Modifier
+                            .align(Alignment.Bottom)
+                    ) {
+                        Icon(imageVector = favoriteImageVector, contentDescription = "삭제하기")
+                    }
 
                     IconButton(
                         onClick = { showEditBoardgameDialog = true },
@@ -167,9 +178,26 @@ fun Boardgame(
                 )
             }
         }
-
-
     }
+
+    if (isFavoriteClicked) {
+        favoriteImageVector = Icons.Filled.Favorite
+    } else {
+        favoriteImageVector = Icons.Filled.FavoriteBorder
+    }
+
+    if (favoriteImageVector == Icons.Filled.FavoriteBorder) {
+        boardgameItem.isFavorite = false
+        viewModel.editBoardgameItem(boardgameItem)
+    }
+
+    if (favoriteImageVector == Icons.Filled.Favorite) {
+        boardgameItem.isFavorite = true
+        viewModel.editBoardgameItem(boardgameItem)
+    }
+
+
+
 
     if (showEditBoardgameDialog) {
         editBoardgameDialogKoreanName = boardgameItem.koreanName

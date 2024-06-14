@@ -1,0 +1,118 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 7,
+    "identityHash": "c0b5a4900af83bc3d24ec058e229d925",
+    "entities": [
+      {
+        "tableName": "boardgame_database",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `boardgameUrl` TEXT NOT NULL, `koreanName` TEXT NOT NULL, `englishName` TEXT NOT NULL, `description` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `minPlayersValue` INTEGER NOT NULL, `maxPlayersValue` INTEGER NOT NULL, `minPlayTimeValue` INTEGER NOT NULL, `maxPlayTimeValue` INTEGER NOT NULL, `linkValueList` TEXT NOT NULL, `numUsersRated` INTEGER NOT NULL, `averageValue` REAL NOT NULL, `bayesAverageValue` REAL NOT NULL, `ranking` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "boardgameUrl",
+            "columnName": "boardgameUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "koreanName",
+            "columnName": "koreanName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "englishName",
+            "columnName": "englishName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "minPlayersValue",
+            "columnName": "minPlayersValue",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxPlayersValue",
+            "columnName": "maxPlayersValue",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "minPlayTimeValue",
+            "columnName": "minPlayTimeValue",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxPlayTimeValue",
+            "columnName": "maxPlayTimeValue",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "linkValueList",
+            "columnName": "linkValueList",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numUsersRated",
+            "columnName": "numUsersRated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "averageValue",
+            "columnName": "averageValue",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bayesAverageValue",
+            "columnName": "bayesAverageValue",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ranking",
+            "columnName": "ranking",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c0b5a4900af83bc3d24ec058e229d925')"
+    ]
+  }
+}

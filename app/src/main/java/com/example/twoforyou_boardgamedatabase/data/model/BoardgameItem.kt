@@ -1,5 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.data.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,6 +11,8 @@ data class BoardgameItem(
     var boardgameUrl: String = "",
     var koreanName : String = "",
     var englishName : String = "",
+    @ColumnInfo("isFavorite", defaultValue = "false")
+    var isFavorite : Boolean = false,
     var description: String = "",
     var imageUrl: String = "",
     var minPlayersValue : Int = 0,
