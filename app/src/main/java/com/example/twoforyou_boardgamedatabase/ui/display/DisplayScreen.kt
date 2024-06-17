@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
@@ -41,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -60,9 +60,13 @@ fun DisplayScreen(
     var expandOrderDropDownMenu by remember { mutableStateOf(false) }
     var displayOrder by remember { mutableStateOf(DISPLAY_ORDER.ALPHABETICAL) }
 
+    var countLabelText by remember { mutableStateOf("전체") }
+
     var showDialog by remember { mutableStateOf(false) }
 
     var boardgameItems by remember { mutableStateOf(boardgameListDisplay) }
+
+    var displayIcon by remember { mutableStateOf(Icons.Filled.KeyboardArrowDown) }
 
     boardgameListDisplay = if (searchString.isBlank()) {
         state.boardgameItemList
@@ -70,14 +74,28 @@ fun DisplayScreen(
         viewModel.searchedBoardgame
     }
 
-    boardgameItems = when (displayOrder) {
-        DISPLAY_ORDER.ALPHABETICAL -> boardgameListDisplay
-        DISPLAY_ORDER.FAVORITE -> boardgameListDisplay.filter {
-            it.isFavorite
+    when (displayOrder) {
+        DISPLAY_ORDER.ALPHABETICAL -> {
+            countLabelText = "전체"
+            boardgameItems = boardgameListDisplay
+            displayIcon = Icons.Filled.KeyboardArrowDown
         }
 
-        DISPLAY_ORDER.NON_FAVORITE -> boardgameListDisplay.filter {
-            !it.isFavorite
+        DISPLAY_ORDER.FAVORITE -> {
+            countLabelText = "즐겨찾기"
+            boardgameItems = boardgameListDisplay.filter {
+                it.isFavorite
+            }
+            displayIcon = Icons.Filled.Favorite
+        }
+
+        DISPLAY_ORDER.NON_FAVORITE -> {
+            countLabelText = "즐겨찾기 제외"
+            boardgameItems = boardgameListDisplay.filter {
+                !it.isFavorite
+            }
+            displayIcon = Icons.Filled.FavoriteBorder
+
         }
     }
 
@@ -100,6 +118,7 @@ fun DisplayScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .padding(bottom = 40.dp)
         ) {
             TextField(
                 value = searchString,
@@ -120,7 +139,7 @@ fun DisplayScreen(
                                 .padding(end = 4.dp)
                         )
                         Icon(
-                            imageVector = Icons.Filled.List,
+                            imageVector = displayIcon,
                             contentDescription = "검색",
                             modifier = Modifier
                                 .clickable {
@@ -162,13 +181,13 @@ fun DisplayScreen(
                                     },
                                     onClick = {
                                         displayOrder = displayOrderEntry
+                                        expandOrderDropDownMenu = false
                                     }
                                 )
                             }
 
                         }
                     }
-
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -196,6 +215,13 @@ fun DisplayScreen(
 
 
             }
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = "${countLabelText} 게임 수 : ${boardgameItems.size} 개",
+                fontSize = 18.sp
+            )
         }
 
 

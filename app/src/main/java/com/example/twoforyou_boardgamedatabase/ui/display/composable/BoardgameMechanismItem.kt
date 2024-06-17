@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.twoforyou_boardgamedatabase.ui.display.util.getKoreanNameOfMechanismItem
 
 @Composable
 fun BoardgameMechanismItem(
@@ -25,7 +26,7 @@ fun BoardgameMechanismItem(
 
     ) {
         Text(
-            text = mechanism,
+            text = getKoreanNameOfMechanismItem(mechanism),
             fontSize = 12.sp
         )
     }
