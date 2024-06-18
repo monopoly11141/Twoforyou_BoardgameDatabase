@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import kotlinx.coroutines.flow.Flow
 
@@ -15,7 +16,7 @@ interface BoardgameDao {
     @Query("SELECT * FROM boardgame_database ORDER BY koreanName ASC, englishName ASC")
     fun getAllBoardgame(): Flow<List<BoardgameItem>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBoardgame(boardgame: BoardgameItem)
 
     @Delete()
@@ -32,5 +33,4 @@ interface BoardgameDao {
 
     @Query("SELECT * FROM boardgame_database WHERE englishName LIKE '%' || :keyword || '%'")
     fun getBoardgameFromKeyword(keyword: String): Flow<List<BoardgameItem>>
-
 }

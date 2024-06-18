@@ -1,8 +1,8 @@
 package com.example.twoforyou_boardgamedatabase.ui.display.composable
 
 import android.icu.text.DecimalFormat
-import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -48,19 +48,20 @@ import coil.request.ImageRequest
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
 import java.math.RoundingMode
-import kotlin.math.log
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Boardgame(
-    boardgameItem: BoardgameItem, viewModel: DisplayViewModel = hiltViewModel()
+    boardgameItem: BoardgameItem,
+    onItemClick: @Composable () -> Unit,
+    viewModel: DisplayViewModel = hiltViewModel()
 ) {
-
     var showDeleteBoardgameDialog by remember { mutableStateOf(false) }
     var showEditBoardgameDialog by remember { mutableStateOf(false) }
     var isFavoriteClicked by remember { mutableStateOf(false) }
     var editBoardgameDialogKoreanName by remember { mutableStateOf(boardgameItem.koreanName) }
     var favoriteImageVector by remember { mutableStateOf(getFavoriteImageVector(boardgameItem)) }
+    var itemClicked by remember {mutableStateOf(false)}
 
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current).data(boardgameItem.imageUrl).build(),
@@ -68,12 +69,16 @@ fun Boardgame(
     )
 
     Column(
-        modifier = Modifier.paint(
-            painter,
-            contentScale = ContentScale.Fit,
-            alpha = 0.2f,
-            alignment = Alignment.CenterEnd
-        )
+        modifier = Modifier
+            .paint(
+                painter,
+                contentScale = ContentScale.Fit,
+                alpha = 0.2f,
+                alignment = Alignment.CenterEnd
+            )
+            .clickable {
+                itemClicked = true
+            }
     ) {
 
         Row(
@@ -118,14 +123,15 @@ fun Boardgame(
                     text = "인원 : ${boardgameItem.minPlayersValue}~${boardgameItem.maxPlayersValue} 명"
                 )
 
-                val df = DecimalFormat("#.###")
-                df.roundingMode = RoundingMode.CEILING.ordinal
+                val df = DecimalFormat("#.##")
+                df.roundingMode = RoundingMode.HALF_UP.ordinal
                 Text(
                     text = "평점 : ${df.format(boardgameItem.bayesAverageValue)}"
                 )
 
                 Text(
-                    text = "시간 : ${boardgameItem.minPlayTimeValue}~${boardgameItem.maxPlayTimeValue} 분"
+                    text = if (boardgameItem.minPlayTimeValue == boardgameItem.maxPlayTimeValue) "시간 : ${boardgameItem.maxPlayTimeValue} 분"
+                    else "시간 : ${boardgameItem.minPlayTimeValue}~${boardgameItem.maxPlayTimeValue} 분"
                 )
 
                 Row(
@@ -259,11 +265,14 @@ fun Boardgame(
 
         }
     }
+
+    if(itemClicked) {
+        onItemClick()
+    }
 }
 
 private fun getFavoriteImageVector(boardgameItem: BoardgameItem): ImageVector {
     return if (boardgameItem.isFavorite) Icons.Filled.Favorite
     else Icons.Filled.FavoriteBorder
 }
-
 

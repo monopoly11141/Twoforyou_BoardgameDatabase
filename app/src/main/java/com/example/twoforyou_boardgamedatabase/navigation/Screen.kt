@@ -8,6 +8,7 @@ sealed class Screen() {
     object DisplayScreen
 
     @Serializable
-    object DetailScreen
-
+    object DetailScreen {
+        val boardgameId: Int = 0
+    }
 }

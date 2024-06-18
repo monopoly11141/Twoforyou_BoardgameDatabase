@@ -9,5 +9,5 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
 
 data class DisplayUiState(
-    var boardgameItemList: List<BoardgameItem> = emptyList()
+    val boardgameItemList: List<BoardgameItem> = emptyList()
 )

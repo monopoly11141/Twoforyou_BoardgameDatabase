@@ -1,5 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,18 +14,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,11 +43,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.twoforyou_boardgamedatabase.navigation.Screen
+import com.example.twoforyou_boardgamedatabase.ui.detail.DetailScreen
 import com.example.twoforyou_boardgamedatabase.ui.display.composable.Boardgame
 import com.example.twoforyou_boardgamedatabase.ui.display.util.DISPLAY_ORDER
 
@@ -52,6 +60,8 @@ fun DisplayScreen(
     navController: NavController,
     viewModel: DisplayViewModel = hiltViewModel()
 ) {
+    val focusManager = LocalFocusManager.current
+
     val state by viewModel.state.collectAsState()
     var dialogBoardgameUrl by remember { mutableStateOf("") }
     var hasSuccesfullyAddedboardgame by remember { mutableStateOf(true) }
@@ -67,6 +77,8 @@ fun DisplayScreen(
     var boardgameItems by remember { mutableStateOf(boardgameListDisplay) }
 
     var displayIcon by remember { mutableStateOf(Icons.Filled.KeyboardArrowDown) }
+
+    Log.d("TAG", "DisplayScreen : ${boardgameListDisplay}")
 
     boardgameListDisplay = if (searchString.isBlank()) {
         state.boardgameItemList
@@ -102,14 +114,13 @@ fun DisplayScreen(
     Scaffold(
         floatingActionButton =
         {
-            ExtendedFloatingActionButton(
+            FloatingActionButton(
                 onClick = { showDialog = true },
                 shape = CircleShape,
                 modifier = Modifier
                     .imePadding()
             ) {
                 Icon(imageVector = Icons.Filled.Edit, contentDescription = "추가")
-                Text("보드게임 추가")
             }
         }
     ) { paddingValues ->
@@ -118,81 +129,105 @@ fun DisplayScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(bottom = 40.dp)
+                .padding(bottom = 16.dp)
         ) {
-            TextField(
-                value = searchString,
-                onValueChange = { searchQuery ->
-                    searchString = searchQuery
-                    viewModel.searchBoardgame(searchString)
-                },
-                trailingIcon = {
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        modifier = Modifier
-                            .padding(end = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = "순서",
-                            modifier = Modifier
-                                .padding(end = 4.dp)
-                        )
-                        Icon(
-                            imageVector = displayIcon,
-                            contentDescription = "검색",
-                            modifier = Modifier
-                                .clickable {
-                                    expandOrderDropDownMenu = true
-                                }
-                        )
-                        DropdownMenu(
-                            expanded = expandOrderDropDownMenu,
-                            onDismissRequest = { expandOrderDropDownMenu = false }
-                        ) {
-                            for (displayOrderEntry in DISPLAY_ORDER.entries) {
-                                var dropDownItemText = ""
-                                var dropDownItemImageVector = Icons.Filled.KeyboardArrowDown
-                                when (displayOrderEntry) {
-                                    DISPLAY_ORDER.ALPHABETICAL -> {
-                                        dropDownItemText = "전체"
-                                        dropDownItemImageVector = Icons.Filled.KeyboardArrowDown
-                                    }
-
-                                    DISPLAY_ORDER.FAVORITE -> {
-                                        dropDownItemText = "즐겨찾기"
-                                        dropDownItemImageVector = Icons.Filled.Favorite
-                                    }
-
-                                    DISPLAY_ORDER.NON_FAVORITE -> {
-                                        dropDownItemText = "즐겨찾기 제외"
-                                        dropDownItemImageVector = Icons.Filled.FavoriteBorder
-                                    }
-                                }
-                                DropdownMenuItem(
-                                    text = {
-                                        Row {
-                                            Text(dropDownItemText)
-                                            Icon(
-                                                imageVector = dropDownItemImageVector,
-                                                contentDescription = dropDownItemText
-                                            )
-                                        }
-                                    },
-                                    onClick = {
-                                        displayOrder = displayOrderEntry
-                                        expandOrderDropDownMenu = false
-                                    }
-                                )
-                            }
-
-                        }
-                    }
-                },
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-            )
 
+            ) {
+                TextField(
+                    value = searchString,
+                    onValueChange = { searchQuery ->
+                        searchString = searchQuery
+                        viewModel.searchBoardgame(searchString)
+                    },
+                    trailingIcon = {
+                        Row(
+                            modifier = Modifier,
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Search,
+                                contentDescription = "검색",
+                                modifier = Modifier
+                                    .padding(end = 4.dp)
+                            )
+                            Icon(
+                                imageVector = displayIcon,
+                                contentDescription = "정렬",
+                                modifier = Modifier
+                                    .clickable {
+                                        expandOrderDropDownMenu = true
+                                    }
+                                    .padding(end = 4.dp)
+                            )
+                            DropdownMenu(
+                                expanded = expandOrderDropDownMenu,
+                                onDismissRequest = { expandOrderDropDownMenu = false }
+                            ) {
+                                for (displayOrderEntry in DISPLAY_ORDER.entries) {
+                                    var dropDownItemText = ""
+                                    var dropDownItemImageVector = Icons.Filled.KeyboardArrowDown
+                                    when (displayOrderEntry) {
+                                        DISPLAY_ORDER.ALPHABETICAL -> {
+                                            dropDownItemText = "전체"
+                                            dropDownItemImageVector = Icons.Filled.KeyboardArrowDown
+                                        }
+
+                                        DISPLAY_ORDER.FAVORITE -> {
+                                            dropDownItemText = "즐겨찾기"
+                                            dropDownItemImageVector = Icons.Filled.Favorite
+                                        }
+
+                                        DISPLAY_ORDER.NON_FAVORITE -> {
+                                            dropDownItemText = "즐겨찾기 제외"
+                                            dropDownItemImageVector = Icons.Filled.FavoriteBorder
+                                        }
+                                    }
+                                    DropdownMenuItem(
+                                        text = {
+                                            Row {
+                                                Text(dropDownItemText)
+                                                Icon(
+                                                    imageVector = dropDownItemImageVector,
+                                                    contentDescription = dropDownItemText
+                                                )
+                                            }
+                                        },
+                                        onClick = {
+                                            displayOrder = displayOrderEntry
+                                            expandOrderDropDownMenu = false
+                                        }
+                                    )
+                                }
+
+                            }
+                        }
+                    },
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = "업데이트",
+                    modifier = Modifier
+                        .clickable {
+                            for (boardgame in state.boardgameItemList) {
+                                viewModel.updateBoardgameItemFromApi(boardgame)
+                            }
+                            boardgameListDisplay = if (searchString.isBlank()) {
+                                state.boardgameItemList
+                            } else {
+                                viewModel.searchedBoardgame
+                            }
+                        }
+                        .align(Alignment.CenterVertically)
+                        .padding(end = 4.dp)
+                )
+            }
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
@@ -205,15 +240,24 @@ fun DisplayScreen(
                     }
                 ) { boardgameItem ->
 
-                    Boardgame(boardgameItem)
+                    Boardgame(
+                        boardgameItem,
+                        {
+                            navController.navigate(
+                                DetailScreen(
+                                    navController = navController,
+                                    boardgameItem.id
+                                )
+                            )
+                        }
+
+                    )
 
                     Divider(
                         thickness = 2.dp,
                         color = Color.Black
                     )
                 }
-
-
             }
 
             Text(
@@ -222,6 +266,7 @@ fun DisplayScreen(
                 text = "${countLabelText} 게임 수 : ${boardgameItems.size} 개",
                 fontSize = 18.sp
             )
+
         }
 
 

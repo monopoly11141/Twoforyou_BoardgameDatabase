@@ -1,5 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.ui.detail
 
+import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.data.model.Item
 import com.example.twoforyou_boardgamedatabase.data.model.Items
 import com.example.twoforyou_boardgamedatabase.data.model.Link
@@ -8,6 +9,6 @@ import com.example.twoforyou_boardgamedatabase.data.model.Ratings
 import com.example.twoforyou_boardgamedatabase.data.model.Statistics
 
 data class DetailUiState(
-    val a: String = ""
+    val boardgameItem: BoardgameItem = BoardgameItem()
 
 )

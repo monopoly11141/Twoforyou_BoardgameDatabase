@@ -25,7 +25,7 @@ class DisplayRepositoryImpl @Inject constructor(
         return retrofit.create(BoardgamegeekApi::class.java)
     }
 
-    override suspend fun insertItemsToDb(boardgameItem: BoardgameItem) {
+    override suspend fun insertItemToDb(boardgameItem: BoardgameItem) {
         boardgameDao.insertBoardgame(boardgameItem)
     }
 

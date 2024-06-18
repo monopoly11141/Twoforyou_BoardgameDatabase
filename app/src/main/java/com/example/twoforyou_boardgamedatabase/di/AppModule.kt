@@ -27,7 +27,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesAddBoardgameRepository(retrofit: Retrofit) : DetailRepository {
-        return DetailRepositoryImpl()
+    fun providesDetailRepository(boardgameDao: BoardgameDao) : DetailRepository {
+        return DetailRepositoryImpl(boardgameDao)
     }
 }

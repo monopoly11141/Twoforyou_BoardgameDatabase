@@ -31,9 +31,12 @@ import org.jsoup.nodes.Document
 @Composable
 fun DetailScreen(
     navController: NavController,
+    boardgameId : Int,
     viewModel: DetailViewModel = hiltViewModel()
 ) {
 
+    navController.navInflater.
+    viewModel.getBoardgameById(boardgameId)
 
-
+    Text(text = viewModel.boardgameItem.toString())
 }
