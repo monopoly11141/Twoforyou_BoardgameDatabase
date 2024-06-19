@@ -19,6 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.toRoute
+import coil.compose.AsyncImage
+import com.example.twoforyou_boardgamedatabase.navigation.Screen
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
@@ -31,11 +34,18 @@ import org.jsoup.nodes.Document
 @Composable
 fun DetailScreen(
     navController: NavController,
-    boardgameId : Int,
+    id: Int,
     viewModel: DetailViewModel = hiltViewModel()
 ) {
-
-    viewModel.getBoardgameById(boardgameId)
-
-    Text(text = viewModel.boardgameItem.toString())
+    LaunchedEffect(key1 = true) {
+        viewModel.getBoardgameById(id)
+    }
+    val boardgameItem = viewModel.boardgameItem
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        AsyncImage(model = boardgameItem.imageUrl, contentDescription = "보드게임 사진")
+    }
+    Log.d("TAG", viewModel.boardgameItem.toString())
 }

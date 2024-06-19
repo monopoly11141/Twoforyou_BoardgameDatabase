@@ -42,10 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
+import com.example.twoforyou_boardgamedatabase.navigation.Screen
+import com.example.twoforyou_boardgamedatabase.ui.detail.DetailScreen
 import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
 import java.math.RoundingMode
 
@@ -53,7 +56,7 @@ import java.math.RoundingMode
 @Composable
 fun Boardgame(
     boardgameItem: BoardgameItem,
-    onItemClick: @Composable () -> Unit,
+    navController: NavController,
     viewModel: DisplayViewModel = hiltViewModel()
 ) {
     var showDeleteBoardgameDialog by remember { mutableStateOf(false) }
@@ -77,7 +80,9 @@ fun Boardgame(
                 alignment = Alignment.CenterEnd
             )
             .clickable {
-                itemClicked = true
+                navController.navigate(
+                   Screen.DetailScreen(boardgameItem.id)
+                )
             }
     ) {
 
@@ -268,10 +273,6 @@ fun Boardgame(
             }
 
         }
-    }
-
-    if(itemClicked) {
-        onItemClick()
     }
 }
 

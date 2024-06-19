@@ -28,7 +28,7 @@ fun Navigation(
             val args = it.toRoute<Screen.DetailScreen>()
             DetailScreen(
                 navController = navController,
-                args.boardgameId
+                args.id
             )
         }
     }

@@ -50,8 +50,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.twoforyou_boardgamedatabase.navigation.Screen
-import com.example.twoforyou_boardgamedatabase.ui.detail.DetailScreen
 import com.example.twoforyou_boardgamedatabase.ui.display.composable.Boardgame
 import com.example.twoforyou_boardgamedatabase.ui.display.util.DISPLAY_ORDER
 
@@ -242,15 +240,7 @@ fun DisplayScreen(
 
                     Boardgame(
                         boardgameItem,
-                        {
-                            navController.navigate(
-                                DetailScreen(
-                                    navController = navController,
-                                    boardgameItem.id
-                                )
-                            )
-                        }
-
+                        navController
                     )
 
                     Divider(
