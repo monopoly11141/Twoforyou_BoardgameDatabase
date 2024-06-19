@@ -1,7 +1,5 @@
-package com.example.twoforyou_boardgamedatabase.data.model
+package com.example.twoforyou_boardgamedatabase.data.model.api_model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.tickaroo.tikxml.annotation.Attribute
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Path

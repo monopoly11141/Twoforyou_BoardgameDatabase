@@ -23,5 +23,7 @@ data class BoardgameItem(
     var numUsersRated : Int = 0,
     var averageValue : Float = 0f,
     var bayesAverageValue : Float = 0f,
-    var ranking : Int = 0
+    var ranking : Int = 0,
+    @ColumnInfo("averageWeight", defaultValue = "0")
+    var averageWeight : Float = 0f
 )

@@ -73,6 +73,7 @@ class DisplayViewModel @Inject constructor(
             boardgameItem.minPlayTimeValue = it.minPlayTimeValue
             boardgameItem.maxPlayersValue = it.maxPlayersValue
             boardgameItem.linkValueList = it.linkValueList
+            boardgameItem.averageWeight = it.averageWeight
             viewModelScope.launch {
                 repository.updateBoardgameItem(boardgameItem = boardgameItem)
 

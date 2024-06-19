@@ -3,11 +3,10 @@ package com.example.twoforyou_boardgamedatabase.data.repository.display
 import android.content.ContentValues.TAG
 import android.service.carrier.CarrierMessagingService.ResultCallback
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import com.example.twoforyou_boardgamedatabase.data.db.local.BoardgameDao
 import com.example.twoforyou_boardgamedatabase.data.db.remote.BoardgamegeekApi
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
-import com.example.twoforyou_boardgamedatabase.data.model.Items
+import com.example.twoforyou_boardgamedatabase.data.model.api_model.Items
 import com.example.twoforyou_boardgamedatabase.domain.DisplayRepository
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
@@ -70,6 +69,8 @@ class DisplayRepositoryImpl @Inject constructor(
                             item.statistics.ratings.usersRatedValue.toInt()
                         boardgameItem.ranking =
                             item.statistics.ratings.ranks.rank.filter { it.friendlyName == "Board Game Rank" }[0].value.toInt()
+                        boardgameItem.averageWeight =
+                            item.statistics.ratings.averageWeightValue.toFloat()
 
                         callback.onReceiveResult(boardgameItem)
                     } catch (e: Exception) {

@@ -134,6 +134,10 @@ fun Boardgame(
                     else "시간 : ${boardgameItem.minPlayTimeValue}~${boardgameItem.maxPlayTimeValue} 분"
                 )
 
+                Text(
+                    text = "복잡도 : ${df.format(boardgameItem.averageWeight)}"
+                )
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,

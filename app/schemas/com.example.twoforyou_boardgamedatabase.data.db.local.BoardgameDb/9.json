@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "aa05e91f2d63de0d25fd73ecf55ff356",
+    "identityHash": "5087032626d38f4c8bbb72171ccee8e9",
     "entities": [
       {
         "tableName": "boardgame_database",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `boardgameUrl` TEXT NOT NULL, `koreanName` TEXT NOT NULL, `englishName` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL DEFAULT 0, `description` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `minPlayersValue` INTEGER NOT NULL, `maxPlayersValue` INTEGER NOT NULL, `minPlayTimeValue` INTEGER NOT NULL, `maxPlayTimeValue` INTEGER NOT NULL, `linkValueList` TEXT NOT NULL, `numUsersRated` INTEGER NOT NULL, `averageValue` REAL NOT NULL, `bayesAverageValue` REAL NOT NULL, `ranking` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `boardgameUrl` TEXT NOT NULL, `koreanName` TEXT NOT NULL, `englishName` TEXT NOT NULL, `isFavorite` INTEGER NOT NULL DEFAULT false, `description` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `minPlayersValue` INTEGER NOT NULL, `maxPlayersValue` INTEGER NOT NULL, `minPlayTimeValue` INTEGER NOT NULL, `maxPlayTimeValue` INTEGER NOT NULL, `linkValueList` TEXT NOT NULL, `numUsersRated` INTEGER NOT NULL, `averageValue` REAL NOT NULL, `bayesAverageValue` REAL NOT NULL, `ranking` INTEGER NOT NULL, `averageWeight` REAL NOT NULL DEFAULT 0)",
         "fields": [
           {
             "fieldPath": "id",
@@ -37,7 +37,7 @@
             "columnName": "isFavorite",
             "affinity": "INTEGER",
             "notNull": true,
-            "defaultValue": "0"
+            "defaultValue": "false"
           },
           {
             "fieldPath": "description",
@@ -104,6 +104,13 @@
             "columnName": "ranking",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "averageWeight",
+            "columnName": "averageWeight",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -119,7 +126,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'aa05e91f2d63de0d25fd73ecf55ff356')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5087032626d38f4c8bbb72171ccee8e9')"
     ]
   }
 }

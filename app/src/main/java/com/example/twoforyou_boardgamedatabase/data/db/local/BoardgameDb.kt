@@ -9,9 +9,10 @@ import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 
 @Database(
     entities = [BoardgameItem::class],
-    version = 8,
+    version = 9,
     autoMigrations = [
         AutoMigration (from = 7, to = 8),
+        AutoMigration (from = 8, to = 9),
     ]
 )
 @TypeConverters(

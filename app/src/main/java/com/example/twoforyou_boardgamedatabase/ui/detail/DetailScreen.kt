@@ -35,7 +35,6 @@ fun DetailScreen(
     viewModel: DetailViewModel = hiltViewModel()
 ) {
 
-    navController.navInflater.
     viewModel.getBoardgameById(boardgameId)
 
     Text(text = viewModel.boardgameItem.toString())

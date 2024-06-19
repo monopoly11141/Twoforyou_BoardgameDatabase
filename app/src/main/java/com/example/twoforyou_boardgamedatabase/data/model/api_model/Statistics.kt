@@ -1,8 +1,6 @@
-package com.example.twoforyou_boardgamedatabase.data.model
+package com.example.twoforyou_boardgamedatabase.data.model.api_model
 
-import com.tickaroo.tikxml.annotation.Attribute
 import com.tickaroo.tikxml.annotation.Element
-import com.tickaroo.tikxml.annotation.Path
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "statistics")
