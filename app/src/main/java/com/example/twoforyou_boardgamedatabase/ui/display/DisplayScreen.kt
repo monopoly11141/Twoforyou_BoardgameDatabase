@@ -1,5 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -34,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,7 +52,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.ui.display.composable.Boardgame
+import com.example.twoforyou_boardgamedatabase.ui.display.composable.TopSearchBar
 import com.example.twoforyou_boardgamedatabase.ui.display.util.DISPLAY_ORDER
 
 @Composable
@@ -58,54 +62,18 @@ fun DisplayScreen(
     navController: NavController,
     viewModel: DisplayViewModel = hiltViewModel()
 ) {
-    val focusManager = LocalFocusManager.current
 
     val state by viewModel.state.collectAsState()
+
     var dialogBoardgameUrl by remember { mutableStateOf("") }
     var hasSuccesfullyAddedboardgame by remember { mutableStateOf(true) }
-    var searchString by remember { mutableStateOf("") }
-    var boardgameListDisplay by remember { mutableStateOf(state.boardgameItemList) }
-    var expandOrderDropDownMenu by remember { mutableStateOf(false) }
-    var displayOrder by remember { mutableStateOf(DISPLAY_ORDER.ALPHABETICAL) }
-
+    var showDialog by remember { mutableStateOf(false) }
     var countLabelText by remember { mutableStateOf("전체") }
 
-    var showDialog by remember { mutableStateOf(false) }
-
-    var boardgameItems by remember { mutableStateOf(boardgameListDisplay) }
-
-    var displayIcon by remember { mutableStateOf(Icons.Filled.KeyboardArrowDown) }
-
-    Log.d("TAG", "DisplayScreen : ${boardgameListDisplay}")
-
-    boardgameListDisplay = if (searchString.isBlank()) {
-        state.boardgameItemList
-    } else {
-        viewModel.searchedBoardgame
-    }
-
-    when (displayOrder) {
-        DISPLAY_ORDER.ALPHABETICAL -> {
-            countLabelText = "전체"
-            boardgameItems = boardgameListDisplay
-            displayIcon = Icons.Filled.KeyboardArrowDown
-        }
-
-        DISPLAY_ORDER.FAVORITE -> {
-            countLabelText = "즐겨찾기"
-            boardgameItems = boardgameListDisplay.filter {
-                it.isFavorite
-            }
-            displayIcon = Icons.Filled.Favorite
-        }
-
-        DISPLAY_ORDER.NON_FAVORITE -> {
-            countLabelText = "즐겨찾기 제외"
-            boardgameItems = boardgameListDisplay.filter {
-                !it.isFavorite
-            }
-            displayIcon = Icons.Filled.FavoriteBorder
-
+    //updating all boardgame item data from api
+    LaunchedEffect(true) {
+        for (boardgameItem in state.boardgameItemList) {
+            viewModel.updateBoardgameItemFromApi(boardgameItem)
         }
     }
 
@@ -129,110 +97,14 @@ fun DisplayScreen(
                 .padding(paddingValues)
                 .padding(bottom = 16.dp)
         ) {
-            Row(
-                modifier = Modifier
+            TopSearchBar()
 
-            ) {
-                TextField(
-                    value = searchString,
-                    onValueChange = { searchQuery ->
-                        searchString = searchQuery
-                        viewModel.searchBoardgame(searchString)
-                    },
-                    trailingIcon = {
-                        Row(
-                            modifier = Modifier,
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = "검색",
-                                modifier = Modifier
-                                    .padding(end = 4.dp)
-                            )
-                            Icon(
-                                imageVector = displayIcon,
-                                contentDescription = "정렬",
-                                modifier = Modifier
-                                    .clickable {
-                                        expandOrderDropDownMenu = true
-                                    }
-                                    .padding(end = 4.dp)
-                            )
-                            DropdownMenu(
-                                expanded = expandOrderDropDownMenu,
-                                onDismissRequest = { expandOrderDropDownMenu = false }
-                            ) {
-                                for (displayOrderEntry in DISPLAY_ORDER.entries) {
-                                    var dropDownItemText = ""
-                                    var dropDownItemImageVector = Icons.Filled.KeyboardArrowDown
-                                    when (displayOrderEntry) {
-                                        DISPLAY_ORDER.ALPHABETICAL -> {
-                                            dropDownItemText = "전체"
-                                            dropDownItemImageVector = Icons.Filled.KeyboardArrowDown
-                                        }
-
-                                        DISPLAY_ORDER.FAVORITE -> {
-                                            dropDownItemText = "즐겨찾기"
-                                            dropDownItemImageVector = Icons.Filled.Favorite
-                                        }
-
-                                        DISPLAY_ORDER.NON_FAVORITE -> {
-                                            dropDownItemText = "즐겨찾기 제외"
-                                            dropDownItemImageVector = Icons.Filled.FavoriteBorder
-                                        }
-                                    }
-                                    DropdownMenuItem(
-                                        text = {
-                                            Row {
-                                                Text(dropDownItemText)
-                                                Icon(
-                                                    imageVector = dropDownItemImageVector,
-                                                    contentDescription = dropDownItemText
-                                                )
-                                            }
-                                        },
-                                        onClick = {
-                                            displayOrder = displayOrderEntry
-                                            expandOrderDropDownMenu = false
-                                        }
-                                    )
-                                }
-
-                            }
-                        }
-                    },
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    modifier = Modifier
-                        .weight(1f)
-                )
-                Icon(
-                    imageVector = Icons.Filled.Refresh,
-                    contentDescription = "업데이트",
-                    modifier = Modifier
-                        .clickable {
-                            for (boardgame in state.boardgameItemList) {
-                                viewModel.updateBoardgameItemFromApi(boardgame)
-                            }
-                            boardgameListDisplay = if (searchString.isBlank()) {
-                                state.boardgameItemList
-                            } else {
-                                viewModel.searchedBoardgame
-                            }
-                        }
-                        .align(Alignment.CenterVertically)
-                        .padding(end = 4.dp)
-                )
-            }
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
             ) {
-
                 items(
-                    items = boardgameItems,
+                    items = viewModel.boardgameDisplayList,
                     key = { boardgameItem ->
                         boardgameItem.id
                     }
@@ -253,7 +125,7 @@ fun DisplayScreen(
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = "${countLabelText} 게임 수 : ${boardgameItems.size} 개",
+                text = "${countLabelText} 게임 수 : ${viewModel.boardgameDisplayList.size} 개",
                 fontSize = 18.sp
             )
 
@@ -280,7 +152,7 @@ fun DisplayScreen(
 
                 Button(
                     onClick = {
-                        hasSuccesfullyAddedboardgame = viewModel.insertItems(dialogBoardgameUrl)
+                        hasSuccesfullyAddedboardgame = viewModel.insertBoardgameItemToDb(dialogBoardgameUrl)
                         showDialog = false
                         dialogBoardgameUrl = ""
                     },

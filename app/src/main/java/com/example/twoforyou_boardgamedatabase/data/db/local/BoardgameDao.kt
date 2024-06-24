@@ -31,6 +31,6 @@ interface BoardgameDao {
     @Query("SELECT * FROM boardgame_database WHERE id = :id LIMIT 1")
     suspend fun getBoardgameById(id: Int): BoardgameItem
 
-    @Query("SELECT * FROM boardgame_database WHERE englishName LIKE '%' || :keyword || '%'")
+    @Query("SELECT * FROM boardgame_database WHERE englishName LIKE '%' || :keyword || '%' ORDER BY koreanName ASC, englishName ASC")
     fun getBoardgameFromKeyword(keyword: String): Flow<List<BoardgameItem>>
 }
