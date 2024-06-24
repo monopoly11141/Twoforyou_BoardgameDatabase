@@ -1,6 +1,5 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.domain.DisplayRepository
+import com.example.twoforyou_boardgamedatabase.ui.display.util.DISPLAY_ORDER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,11 +21,14 @@ import javax.inject.Inject
 class DisplayViewModel @Inject constructor(
     private val repository: DisplayRepository
 ) : ViewModel() {
-    var searchedBoardgameItemList by mutableStateOf(emptyList<BoardgameItem>())
-    var boardgameDisplayList by mutableStateOf(emptyList<BoardgameItem>())
+    var entireBoardgameItemList by mutableStateOf(emptyList<BoardgameItem>())
+    var displayingBoardgameItemList by mutableStateOf(emptyList<BoardgameItem>())
+    var displayOrder by mutableStateOf(DISPLAY_ORDER.ALPHABETICAL)
+    var bottomBarLabelText by mutableStateOf("전체")
+
     init {
         viewModelScope.launch {
-            boardgameDisplayList = repository.getAllBoardgameItem().stateIn(viewModelScope).value
+            entireBoardgameItemList = repository.getAllBoardgameItem().stateIn(viewModelScope).value
         }
     }
     private val _state = MutableStateFlow(DisplayUiState())
@@ -104,12 +107,32 @@ class DisplayViewModel @Inject constructor(
         }
     }
 
-    fun searchBoardgame(searchQuery: String) {
+    fun updateDisplayingBoardgameItemList(searchQuery: String) {
         viewModelScope.launch {
-            searchedBoardgameItemList = repository.getBoardgameFromKeyword(searchQuery).stateIn(viewModelScope).value
-        }
+            if(searchQuery.isBlank()) {
+                displayingBoardgameItemList = entireBoardgameItemList
+            }
+            displayingBoardgameItemList = repository.getBoardgameFromKeyword(searchQuery).stateIn(viewModelScope).value
 
-        boardgameDisplayList = if(searchQuery.isBlank()) _state.value.boardgameItemList else searchedBoardgameItemList
+            when (displayOrder) {
+                DISPLAY_ORDER.ALPHABETICAL -> {
+                    bottomBarLabelText = "전체"
+                }
+                DISPLAY_ORDER.FAVORITE -> {
+                    displayingBoardgameItemList = displayingBoardgameItemList.filter { it.isFavorite }
+                    bottomBarLabelText = "즐겨찾기"
+                }
+
+                DISPLAY_ORDER.NON_FAVORITE -> {
+                    displayingBoardgameItemList = displayingBoardgameItemList.filter { !it.isFavorite }
+                    bottomBarLabelText = "즐겨찾기 제외"
+                }
+            }
+        }
+    }
+
+    fun updateDisplayOrder(displayOrder: DISPLAY_ORDER) {
+        this.displayOrder = displayOrder
     }
 
 }

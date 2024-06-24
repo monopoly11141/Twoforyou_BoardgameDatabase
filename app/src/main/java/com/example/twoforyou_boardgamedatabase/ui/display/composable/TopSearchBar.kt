@@ -3,6 +3,7 @@ package com.example.twoforyou_boardgamedatabase.ui.display.composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,46 +33,30 @@ import com.example.twoforyou_boardgamedatabase.ui.display.util.DISPLAY_ORDER
 
 @Composable
 fun TopSearchBar(
+    modifier : Modifier = Modifier,
     viewModel: DisplayViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
 
     val focusManager = LocalFocusManager.current
     var expandOrderDropDownMenu by remember { mutableStateOf(false) }
     var boardgameSearchQuery by remember { mutableStateOf("") }
-    var displayOrder by remember { mutableStateOf(DISPLAY_ORDER.ALPHABETICAL) }
     var displayIcon by remember { mutableStateOf(Icons.Filled.KeyboardArrowDown) }
 
-    viewModel.searchBoardgame(boardgameSearchQuery)
-    viewModel.boardgameDisplayList = if(boardgameSearchQuery.isBlank()) state.boardgameItemList else viewModel.searchedBoardgameItemList
+    viewModel.updateDisplayingBoardgameItemList(boardgameSearchQuery)
 
+    displayIcon = when (viewModel.displayOrder) {
+        DISPLAY_ORDER.ALPHABETICAL -> {
+            Icons.Filled.KeyboardArrowDown
+        }
+        DISPLAY_ORDER.FAVORITE -> {
+            Icons.Filled.Favorite
+        }
+        DISPLAY_ORDER.NON_FAVORITE -> {
+            Icons.Filled.FavoriteBorder
+        }
+    }
 
-//    when (displayOrder)
-//        DISPLAY_ORDER.ALPHABETICAL -> {
-//            countLabelText = "전체"
-//            boardgameItems = boardgameListDisplay
-//            displayIcon = Icons.Filled.KeyboardArrowDown
-//        }
-//
-//        DISPLAY_ORDER.FAVORITE -> {
-//            countLabelText = "즐겨찾기"
-//            boardgameItems = boardgameListDisplay.filter {
-//                it.isFavorite
-//            }
-//            displayIcon = Icons.Filled.Favorite
-//        }
-//
-//        DISPLAY_ORDER.NON_FAVORITE -> {
-//            countLabelText = "즐겨찾기 제외"
-//            boardgameItems = boardgameListDisplay.filter {
-//                !it.isFavorite
-//            }
-//            displayIcon = Icons.Filled.FavoriteBorder
-//
-//        }
-//    }
-
-    Row() {
+    Row(modifier) {
         TextField(
             value = boardgameSearchQuery,
             onValueChange = { searchQuery ->
@@ -80,7 +64,6 @@ fun TopSearchBar(
             },
             trailingIcon = {
                 Row(
-                    modifier = Modifier,
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -133,19 +116,18 @@ fun TopSearchBar(
                                     }
                                 },
                                 onClick = {
-                                    displayOrder = displayOrderEntry
+                                    viewModel.updateDisplayOrder(displayOrderEntry)
                                     expandOrderDropDownMenu = false
                                 }
                             )
                         }
-
                     }
                 }
             },
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             modifier = Modifier
-                .weight(1f)
+                .fillMaxWidth()
         )
     }
 }

@@ -1,12 +1,7 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -15,20 +10,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -45,17 +31,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.ui.display.composable.Boardgame
+import com.example.twoforyou_boardgamedatabase.ui.display.composable.BoardgameDisplay
+import com.example.twoforyou_boardgamedatabase.ui.display.composable.BottomBar
 import com.example.twoforyou_boardgamedatabase.ui.display.composable.TopSearchBar
-import com.example.twoforyou_boardgamedatabase.ui.display.util.DISPLAY_ORDER
 
 @Composable
 fun DisplayScreen(
@@ -68,7 +52,6 @@ fun DisplayScreen(
     var dialogBoardgameUrl by remember { mutableStateOf("") }
     var hasSuccesfullyAddedboardgame by remember { mutableStateOf(true) }
     var showDialog by remember { mutableStateOf(false) }
-    var countLabelText by remember { mutableStateOf("전체") }
 
     //updating all boardgame item data from api
     LaunchedEffect(true) {
@@ -97,41 +80,22 @@ fun DisplayScreen(
                 .padding(paddingValues)
                 .padding(bottom = 16.dp)
         ) {
-            TopSearchBar()
-
-            LazyColumn(
+            TopSearchBar(
                 modifier = Modifier
-                    .weight(1f)
-            ) {
-                items(
-                    items = viewModel.boardgameDisplayList,
-                    key = { boardgameItem ->
-                        boardgameItem.id
-                    }
-                ) { boardgameItem ->
-
-                    Boardgame(
-                        boardgameItem,
-                        navController
-                    )
-
-                    Divider(
-                        thickness = 2.dp,
-                        color = Color.Black
-                    )
-                }
-            }
-
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = "${countLabelText} 게임 수 : ${viewModel.boardgameDisplayList.size} 개",
-                fontSize = 18.sp
+                    .fillMaxWidth()
             )
 
+            BoardgameDisplay(
+                modifier = Modifier
+                    .weight(1f),
+                navController = navController
+            )
+
+            BottomBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
         }
-
-
     }
 
     if (showDialog) {
