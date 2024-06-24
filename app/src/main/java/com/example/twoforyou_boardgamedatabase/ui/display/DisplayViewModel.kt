@@ -26,7 +26,6 @@ import javax.inject.Inject
 class DisplayViewModel @Inject constructor(
     private val repository: DisplayRepository
 ) : ViewModel() {
-    lateinit var a : List<BoardgameItem>
     var searchedBoardgame by mutableStateOf(emptyList<BoardgameItem>())
     private val _state = MutableStateFlow(DisplayUiState())
     val state = combine(

@@ -1,11 +1,10 @@
 package com.example.twoforyou_boardgamedatabase.data.repository.display
 
-import android.content.ContentValues.TAG
 import android.service.carrier.CarrierMessagingService.ResultCallback
-import android.util.Log
 import com.example.twoforyou_boardgamedatabase.data.db.local.BoardgameDao
 import com.example.twoforyou_boardgamedatabase.data.db.remote.BoardgamegeekApi
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
+import com.example.twoforyou_boardgamedatabase.data.model.api_model.Item
 import com.example.twoforyou_boardgamedatabase.data.model.api_model.Items
 import com.example.twoforyou_boardgamedatabase.domain.DisplayRepository
 import kotlinx.coroutines.flow.Flow
@@ -32,8 +31,11 @@ class DisplayRepositoryImpl @Inject constructor(
         boardgameDao.deleteBoardgame(boardgameItem)
     }
 
+    override suspend fun updateBoardgameItem(boardgameItem: BoardgameItem) {
+        boardgameDao.updateBoardgame(boardgameItem)
+    }
+
     override fun getBoardgameItem(id: Int, callback: ResultCallback<BoardgameItem>) {
-        val boardgameItem = BoardgameItem()
         val call = getBoardgamegeekApi().boardListPost(id.toString())
         var items: Items
         call.enqueue(object : Callback<Items> {
@@ -43,34 +45,10 @@ class DisplayRepositoryImpl @Inject constructor(
             ) {
                 if (response.isSuccessful) {
                     try {
-                        Log.d(TAG, "onResponse: successful response, ${response.body()!!.item}")
                         items = response.body()!!
                         val item = items.item
 
-                        boardgameItem.koreanName = getKoreanName(item.name.map {
-                            it.value
-                        })
-                        boardgameItem.englishName = getEnglishName(item.name.map {
-                            it.value
-                        })
-                        boardgameItem.boardgameUrl = "https://boardgamegeek.com/boardgame/$id"
-                        boardgameItem.imageUrl = item.imageUrl
-                        boardgameItem.description = item.description
-                        boardgameItem.linkValueList =
-                            item.link.filter { it.type == "boardgamemechanic" }.map { it.value }
-                        boardgameItem.averageValue = item.statistics.ratings.averageValue.toFloat()
-                        boardgameItem.bayesAverageValue =
-                            item.statistics.ratings.bayesAverageValue.toFloat()
-                        boardgameItem.maxPlayTimeValue = item.maxPlayTimeValue.toInt()
-                        boardgameItem.minPlayTimeValue = item.minPlayTimeValue.toInt()
-                        boardgameItem.maxPlayersValue = item.maxPlayersValue.toInt()
-                        boardgameItem.minPlayersValue = item.minPlayersValue.toInt()
-                        boardgameItem.numUsersRated =
-                            item.statistics.ratings.usersRatedValue.toInt()
-                        boardgameItem.ranking =
-                            item.statistics.ratings.ranks.rank.filter { it.friendlyName == "Board Game Rank" }[0].value.toInt()
-                        boardgameItem.averageWeight =
-                            item.statistics.ratings.averageWeightValue.toFloat()
+                        val boardgameItem = makeBoardgameItemFromItem(item, id)
 
                         callback.onReceiveResult(boardgameItem)
                     } catch (e: Exception) {
@@ -86,16 +64,43 @@ class DisplayRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun updateBoardgameItem(boardgameItem: BoardgameItem) {
-        boardgameDao.updateBoardgame(boardgameItem)
-    }
-
     override fun getAllBoardgameItem(): Flow<List<BoardgameItem>> {
         return boardgameDao.getAllBoardgame()
     }
 
     override fun getBoardgameFromKeyword(keyword: String): Flow<List<BoardgameItem>> {
         return boardgameDao.getBoardgameFromKeyword(keyword)
+    }
+
+    private fun makeBoardgameItemFromItem(item: Item, id: Int): BoardgameItem {
+        val boardgameItem = BoardgameItem()
+
+        boardgameItem.koreanName = getKoreanName(item.name.map {
+            it.value
+        })
+        boardgameItem.englishName = getEnglishName(item.name.map {
+            it.value
+        })
+        boardgameItem.boardgameUrl = "https://boardgamegeek.com/boardgame/$id"
+        boardgameItem.imageUrl = item.imageUrl
+        boardgameItem.description = item.description
+        boardgameItem.linkValueList =
+            item.link.filter { it.type == "boardgamemechanic" }.map { it.value }
+        boardgameItem.averageValue = item.statistics.ratings.averageValue.toFloat()
+        boardgameItem.bayesAverageValue =
+            item.statistics.ratings.bayesAverageValue.toFloat()
+        boardgameItem.maxPlayTimeValue = item.maxPlayTimeValue.toInt()
+        boardgameItem.minPlayTimeValue = item.minPlayTimeValue.toInt()
+        boardgameItem.maxPlayersValue = item.maxPlayersValue.toInt()
+        boardgameItem.minPlayersValue = item.minPlayersValue.toInt()
+        boardgameItem.numUsersRated =
+            item.statistics.ratings.usersRatedValue.toInt()
+        boardgameItem.ranking =
+            item.statistics.ratings.ranks.rank.filter { it.friendlyName == "Board Game Rank" }[0].value.toInt()
+        boardgameItem.averageWeight =
+            item.statistics.ratings.averageWeightValue.toFloat()
+
+        return boardgameItem
     }
 
     private fun getKoreanName(nameList: List<String>): String {
@@ -111,7 +116,6 @@ class DisplayRepositoryImpl @Inject constructor(
     private fun getEnglishName(nameList: List<String>): String {
         return nameList[0]
     }
-
 
     private fun filterKoreanFromString(nameString: String): String {
         return nameString.filter {
