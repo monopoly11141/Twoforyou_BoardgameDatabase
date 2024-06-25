@@ -54,7 +54,11 @@ class DisplayViewModel @Inject constructor(
             viewModelScope.launch {
                 repository.insertItemToDb(boardgameItem = it)
             }
+            viewModelScope.launch {
+                entireBoardgameItemList = repository.getAllBoardgameItem().stateIn(viewModelScope).value
+            }
         })
+
         return true
     }
 
@@ -99,11 +103,15 @@ class DisplayViewModel @Inject constructor(
                 )
             }
         }
+        updateDisplayingBoardgameItemList("")
     }
 
     fun editBoardgameItem(boardgameItem: BoardgameItem) {
         viewModelScope.launch {
             repository.updateBoardgameItem(boardgameItem)
+        }
+        viewModelScope.launch {
+            entireBoardgameItemList = repository.getAllBoardgameItem().stateIn(viewModelScope).value
         }
     }
 
@@ -112,7 +120,8 @@ class DisplayViewModel @Inject constructor(
             if(searchQuery.isBlank()) {
                 displayingBoardgameItemList = entireBoardgameItemList
             }
-            displayingBoardgameItemList = repository.getBoardgameFromKeyword(searchQuery).stateIn(viewModelScope).value
+                displayingBoardgameItemList = repository.getBoardgameFromKeyword(searchQuery).stateIn(viewModelScope).value
+
 
             when (displayOrder) {
                 DISPLAY_ORDER.ALPHABETICAL -> {

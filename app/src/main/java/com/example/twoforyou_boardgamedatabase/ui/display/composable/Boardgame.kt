@@ -48,7 +48,6 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.twoforyou_boardgamedatabase.data.model.BoardgameItem
 import com.example.twoforyou_boardgamedatabase.navigation.Screen
-import com.example.twoforyou_boardgamedatabase.ui.detail.DetailScreen
 import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
 import java.math.RoundingMode
 
@@ -64,7 +63,6 @@ fun Boardgame(
     var isFavoriteClicked by remember { mutableStateOf(false) }
     var editBoardgameDialogKoreanName by remember { mutableStateOf(boardgameItem.koreanName) }
     var favoriteImageVector by remember { mutableStateOf(getFavoriteImageVector(boardgameItem)) }
-    var itemClicked by remember {mutableStateOf(false)}
 
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current).data(boardgameItem.imageUrl).build(),
@@ -81,7 +79,7 @@ fun Boardgame(
             )
             .clickable {
                 navController.navigate(
-                   Screen.DetailScreen(boardgameItem.id)
+                    Screen.DetailScreen(boardgameItem.id)
                 )
             }
     ) {
@@ -125,7 +123,8 @@ fun Boardgame(
                 )
 
                 Text(
-                    text = "인원 : ${boardgameItem.minPlayersValue}~${boardgameItem.maxPlayersValue} 명"
+                    text = if (boardgameItem.minPlayersValue == boardgameItem.maxPlayersValue) "인원 : ${boardgameItem.minPlayersValue} 명"
+                    else "인원 : ${boardgameItem.minPlayersValue}~${boardgameItem.maxPlayersValue} 명"
                 )
 
                 val df = DecimalFormat("#.##")

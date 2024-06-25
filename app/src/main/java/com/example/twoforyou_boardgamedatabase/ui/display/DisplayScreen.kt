@@ -41,6 +41,7 @@ import com.example.twoforyou_boardgamedatabase.ui.display.composable.BoardgameDi
 import com.example.twoforyou_boardgamedatabase.ui.display.composable.BottomBar
 import com.example.twoforyou_boardgamedatabase.ui.display.composable.TopSearchBar
 
+
 @Composable
 fun DisplayScreen(
     navController: NavController,
@@ -49,17 +50,16 @@ fun DisplayScreen(
 
     val state by viewModel.state.collectAsState()
 
-    var dialogBoardgameUrl by remember { mutableStateOf("") }
-    var hasSuccesfullyAddedboardgame by remember { mutableStateOf(true) }
-    var showDialog by remember { mutableStateOf(false) }
-
     //updating all boardgame item data from api
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit, state.boardgameItemList) {
         for (boardgameItem in state.boardgameItemList) {
             viewModel.updateBoardgameItemFromApi(boardgameItem)
         }
     }
 
+    var dialogBoardgameUrl by remember { mutableStateOf("") }
+    var hasSuccesfullyAddedboardgame by remember { mutableStateOf(true) }
+    var showDialog by remember { mutableStateOf(false) }
     Scaffold(
         floatingActionButton =
         {
