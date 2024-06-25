@@ -1,5 +1,7 @@
 package com.example.twoforyou_boardgamedatabase.ui.display.composable
 
+
+import android.media.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -24,10 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.twoforyou_boardgamedatabase.R
 import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
 import com.example.twoforyou_boardgamedatabase.ui.display.util.DISPLAY_ORDER
 
@@ -45,15 +52,11 @@ fun TopSearchBar(
     viewModel.updateDisplayingBoardgameItemList(boardgameSearchQuery)
 
     displayIcon = when (viewModel.displayOrder) {
-        DISPLAY_ORDER.ALPHABETICAL -> {
-            Icons.Filled.KeyboardArrowDown
-        }
-        DISPLAY_ORDER.FAVORITE -> {
-            Icons.Filled.Favorite
-        }
-        DISPLAY_ORDER.NON_FAVORITE -> {
-            Icons.Filled.FavoriteBorder
-        }
+        DISPLAY_ORDER.ALPHABETICAL -> Icons.Filled.KeyboardArrowDown
+        DISPLAY_ORDER.FAVORITE -> Icons.Filled.Favorite
+        DISPLAY_ORDER.NON_FAVORITE -> Icons.Filled.FavoriteBorder
+        DISPLAY_ORDER.RANKING ->  Icons.Filled.List
+        DISPLAY_ORDER.WEIGHT ->  Icons.Filled.List
     }
 
     Row(modifier) {
@@ -103,6 +106,14 @@ fun TopSearchBar(
                                 DISPLAY_ORDER.NON_FAVORITE -> {
                                     dropDownItemText = "즐겨찾기 제외"
                                     dropDownItemImageVector = Icons.Filled.FavoriteBorder
+                                }
+                                DISPLAY_ORDER.RANKING -> {
+                                    dropDownItemText = "긱 순위"
+                                    dropDownItemImageVector = Icons.Filled.List
+                                }
+                                DISPLAY_ORDER.WEIGHT -> {
+                                    dropDownItemText = "복잡도"
+                                    dropDownItemImageVector = Icons.Filled.List
                                 }
                             }
                             DropdownMenuItem(

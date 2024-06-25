@@ -1,6 +1,7 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,9 @@ class DisplayViewModel @Inject constructor(
     var displayingBoardgameItemList by mutableStateOf(emptyList<BoardgameItem>())
     var displayOrder by mutableStateOf(DISPLAY_ORDER.ALPHABETICAL)
     var bottomBarLabelText by mutableStateOf("전체")
+
+    var optionMinPlayer by mutableIntStateOf(0)
+    var optionMaxPlayer by mutableIntStateOf(100)
 
     init {
         viewModelScope.launch {
@@ -135,6 +139,13 @@ class DisplayViewModel @Inject constructor(
                 DISPLAY_ORDER.NON_FAVORITE -> {
                     displayingBoardgameItemList = displayingBoardgameItemList.filter { !it.isFavorite }
                     bottomBarLabelText = "즐겨찾기 제외"
+                }
+
+                DISPLAY_ORDER.RANKING -> {
+
+                }
+                DISPLAY_ORDER.WEIGHT -> {
+
                 }
             }
         }
