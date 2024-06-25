@@ -18,8 +18,8 @@ fun BoardgameMechanismItem(
 ) {
     Card(
         modifier = Modifier
-            .clip(RoundedCornerShape(4.dp))
-            .padding(vertical = 2.dp),
+            .padding(vertical = 2.dp)
+            .clip(RoundedCornerShape(2.dp)),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         )
@@ -27,7 +27,9 @@ fun BoardgameMechanismItem(
     ) {
         Text(
             text = getKoreanNameOfMechanismItem(mechanism),
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            modifier = Modifier
+                .padding(horizontal = 4.dp)
         )
     }
 }

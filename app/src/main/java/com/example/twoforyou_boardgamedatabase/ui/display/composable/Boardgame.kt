@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -69,6 +71,9 @@ fun Boardgame(
         contentScale = ContentScale.Fit
     )
 
+    val df = DecimalFormat("0.00")
+    df.roundingMode = RoundingMode.HALF_UP.ordinal
+
     Column(
         modifier = Modifier
             .paint(
@@ -82,8 +87,8 @@ fun Boardgame(
                     Screen.DetailScreen(boardgameItem.id)
                 )
             }
+            .fillMaxHeight()
     ) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -104,20 +109,20 @@ fun Boardgame(
         )
 
         Row(
-
+            modifier = Modifier
+                .fillMaxWidth(),
         ) {
             AsyncImage(
                 model = boardgameItem.imageUrl,
                 contentDescription = "보드게임 이미지",
                 modifier = Modifier
-                    .size(140.dp)
+                    .size(120.dp)
                     .padding(5.dp)
             )
 
             Column(
-
+                modifier = Modifier
             ) {
-
                 Text(
                     text = "긱 순위 : ${boardgameItem.ranking} 위"
                 )
@@ -125,12 +130,6 @@ fun Boardgame(
                 Text(
                     text = if (boardgameItem.minPlayersValue == boardgameItem.maxPlayersValue) "인원 : ${boardgameItem.minPlayersValue} 명"
                     else "인원 : ${boardgameItem.minPlayersValue}~${boardgameItem.maxPlayersValue} 명"
-                )
-
-                val df = DecimalFormat("#.##")
-                df.roundingMode = RoundingMode.HALF_UP.ordinal
-                Text(
-                    text = "평점 : ${df.format(boardgameItem.bayesAverageValue)}"
                 )
 
                 Text(
@@ -141,39 +140,59 @@ fun Boardgame(
                 Text(
                     text = "복잡도 : ${df.format(boardgameItem.averageWeight)}"
                 )
+            }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.Bottom
-                ) {
-
-                    IconButton(
-                        onClick = { isFavoriteClicked = !isFavoriteClicked },
-                        modifier = Modifier.align(Alignment.Bottom)
-                    ) {
-                        Icon(imageVector = favoriteImageVector, contentDescription = "즐겨찾기")
-                    }
-
-                    IconButton(
-                        onClick = { showEditBoardgameDialog = true },
-                        modifier = Modifier.align(Alignment.Bottom)
-                    ) {
-                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "수정하기")
-                    }
-
-                    IconButton(
-                        onClick = { showDeleteBoardgameDialog = true },
-                        modifier = Modifier.align(Alignment.Bottom)
-                    ) {
-                        Icon(imageVector = Icons.Filled.Delete, contentDescription = "삭제하기")
-                    }
-
-
-                }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
+                horizontalAlignment = Alignment.End,
+            ) {
+                Text(
+                    modifier = Modifier
+                        .drawBehind {
+                            drawCircle(
+                                color = Color.Gray,
+                                radius = this.size.maxDimension / 2.0f
+                            )
+                        }
+                        .padding(horizontal = 16.dp)
+                    ,
+                    text = df.format(boardgameItem.bayesAverageValue),
+                )
             }
 
         }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.Bottom
+        ) {
+
+            IconButton(
+                onClick = { isFavoriteClicked = !isFavoriteClicked },
+                modifier = Modifier.align(Alignment.Bottom)
+            ) {
+                Icon(imageVector = favoriteImageVector, contentDescription = "즐겨찾기")
+            }
+
+            IconButton(
+                onClick = { showEditBoardgameDialog = true },
+                modifier = Modifier.align(Alignment.Bottom)
+            ) {
+                Icon(imageVector = Icons.Filled.Edit, contentDescription = "수정하기")
+            }
+
+            IconButton(
+                onClick = { showDeleteBoardgameDialog = true },
+                modifier = Modifier.align(Alignment.Bottom)
+            ) {
+                Icon(imageVector = Icons.Filled.Delete, contentDescription = "삭제하기")
+            }
+        }
+
 
         FlowRow(
             modifier = Modifier.padding(horizontal = 4.dp)
