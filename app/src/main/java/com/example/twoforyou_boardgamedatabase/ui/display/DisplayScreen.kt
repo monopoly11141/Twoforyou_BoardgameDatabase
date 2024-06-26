@@ -82,7 +82,8 @@ fun DisplayScreen(
         ) {
             TopSearchBar(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                navController = navController
             )
 
             BoardgameDisplay(

@@ -3,8 +3,10 @@ package com.example.twoforyou_boardgamedatabase.di
 import com.example.twoforyou_boardgamedatabase.data.db.local.BoardgameDao
 import com.example.twoforyou_boardgamedatabase.data.repository.detail.DetailRepositoryImpl
 import com.example.twoforyou_boardgamedatabase.data.repository.display.DisplayRepositoryImpl
+import com.example.twoforyou_boardgamedatabase.data.repository.filtered.FilteredRepositoryImpl
 import com.example.twoforyou_boardgamedatabase.domain.DetailRepository
 import com.example.twoforyou_boardgamedatabase.domain.DisplayRepository
+import com.example.twoforyou_boardgamedatabase.domain.FilteredRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,4 +32,12 @@ object AppModule {
     fun providesDetailRepository(boardgameDao: BoardgameDao) : DetailRepository {
         return DetailRepositoryImpl(boardgameDao)
     }
+
+    @Provides
+    @Singleton
+    fun providesFilteredRepository(boardgameDao: BoardgameDao) : FilteredRepository {
+        return FilteredRepositoryImpl(boardgameDao)
+    }
+
+
 }

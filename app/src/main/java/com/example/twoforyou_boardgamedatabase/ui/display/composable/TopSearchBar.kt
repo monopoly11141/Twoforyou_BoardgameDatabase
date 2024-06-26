@@ -30,22 +30,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
 import com.example.twoforyou_boardgamedatabase.ui.display.util.DISPLAY_ORDER
 
 @Composable
 fun TopSearchBar(
-    modifier : Modifier = Modifier,
-    viewModel: DisplayViewModel = hiltViewModel()
+    modifier: Modifier = Modifier,
+    viewModel: DisplayViewModel = hiltViewModel(),
+    navController: NavController
 ) {
 
     val focusManager = LocalFocusManager.current
     var expandOrderDropDownMenu by remember { mutableStateOf(false) }
     var boardgameSearchQuery by remember { mutableStateOf("") }
     var displayIcon by remember { mutableStateOf(Icons.Filled.KeyboardArrowDown) }
-    var openFilterDialog by remember {mutableStateOf(false)}
+    var openFilterDialog by remember { mutableStateOf(false) }
 
     viewModel.updateDisplayingBoardgameItemList(boardgameSearchQuery)
 
@@ -53,8 +54,8 @@ fun TopSearchBar(
         DISPLAY_ORDER.ALPHABETICAL -> Icons.Filled.KeyboardArrowDown
         DISPLAY_ORDER.FAVORITE -> Icons.Filled.Favorite
         DISPLAY_ORDER.NON_FAVORITE -> Icons.Filled.FavoriteBorder
-        DISPLAY_ORDER.RANKING ->  Icons.Filled.List
-        DISPLAY_ORDER.WEIGHT ->  Icons.Filled.List
+        DISPLAY_ORDER.RANKING -> Icons.Filled.List
+        DISPLAY_ORDER.WEIGHT -> Icons.Filled.List
     }
 
     Row(modifier) {
@@ -106,10 +107,12 @@ fun TopSearchBar(
                                     dropDownItemText = "즐겨찾기 제외"
                                     dropDownItemImageVector = Icons.Filled.FavoriteBorder
                                 }
+
                                 DISPLAY_ORDER.RANKING -> {
                                     dropDownItemText = "긱 순위"
                                     dropDownItemImageVector = Icons.Filled.List
                                 }
+
                                 DISPLAY_ORDER.WEIGHT -> {
                                     dropDownItemText = "복잡도"
                                     dropDownItemImageVector = Icons.Filled.List
@@ -139,7 +142,7 @@ fun TopSearchBar(
                         modifier = Modifier
                             .clickable {
                                 openFilterDialog = true
-                        }
+                            }
                     )
                 }
             },
@@ -150,9 +153,12 @@ fun TopSearchBar(
         )
     }
 
-    if(openFilterDialog) {
-        BoardgameFilterDialog(modifier) {
-            openFilterDialog = false
-        }
+    if (openFilterDialog) {
+        BoardgameFilterDialog(
+            modifier,
+            { openFilterDialog = false },
+            navController
+        )
     }
+
 }

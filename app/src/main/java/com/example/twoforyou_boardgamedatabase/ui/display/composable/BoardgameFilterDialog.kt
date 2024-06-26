@@ -19,12 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import java.math.RoundingMode
 
 @Composable
 fun BoardgameFilterDialog(
     modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    navController: NavController
 ) {
     var sliderPlayerCountRange by remember { mutableStateOf(1f..10f) }
     var sliderBayesAverageRange by remember { mutableStateOf(0f..10f) }

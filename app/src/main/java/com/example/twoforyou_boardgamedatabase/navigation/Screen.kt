@@ -11,4 +11,9 @@ sealed class Screen() {
     data class DetailScreen(
         val id: Int = 0
     )
+
+    @Serializable
+    data class Filtered(
+        val idList: List<Int> = emptyList()
+    )
 }
