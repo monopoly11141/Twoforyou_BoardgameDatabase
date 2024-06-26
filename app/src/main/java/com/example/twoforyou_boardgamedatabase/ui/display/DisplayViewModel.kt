@@ -1,7 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -27,14 +26,12 @@ class DisplayViewModel @Inject constructor(
     var displayOrder by mutableStateOf(DISPLAY_ORDER.ALPHABETICAL)
     var bottomBarLabelText by mutableStateOf("전체")
 
-    var optionMinPlayer by mutableIntStateOf(0)
-    var optionMaxPlayer by mutableIntStateOf(100)
-
     init {
         viewModelScope.launch {
             entireBoardgameItemList = repository.getAllBoardgameItem().stateIn(viewModelScope).value
         }
     }
+
     private val _state = MutableStateFlow(DisplayUiState())
     val state = combine(
         repository.getAllBoardgameItem(),
@@ -57,12 +54,10 @@ class DisplayViewModel @Inject constructor(
         repository.getBoardgameItem(id, callback = {
             viewModelScope.launch {
                 repository.insertItemToDb(boardgameItem = it)
-            }
-            viewModelScope.launch {
-                entireBoardgameItemList = repository.getAllBoardgameItem().stateIn(viewModelScope).value
+                entireBoardgameItemList =
+                    repository.getAllBoardgameItem().stateIn(viewModelScope).value
             }
         })
-
         return true
     }
 
@@ -92,7 +87,8 @@ class DisplayViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    boardgameItemList = repository.getAllBoardgameItem().stateIn(viewModelScope).value
+                    boardgameItemList = repository.getAllBoardgameItem()
+                        .stateIn(viewModelScope).value
                 )
             }
         }
@@ -103,11 +99,13 @@ class DisplayViewModel @Inject constructor(
             repository.deleteBoardgameItem(boardgameItem)
             _state.update {
                 it.copy(
-                    boardgameItemList = repository.getAllBoardgameItem().stateIn(viewModelScope).value
+                    boardgameItemList = repository.getAllBoardgameItem()
+                        .stateIn(viewModelScope).value
                 )
             }
+            entireBoardgameItemList = repository.getAllBoardgameItem().stateIn(viewModelScope).value
+
         }
-        updateDisplayingBoardgameItemList("")
     }
 
     fun editBoardgameItem(boardgameItem: BoardgameItem) {
@@ -121,31 +119,42 @@ class DisplayViewModel @Inject constructor(
 
     fun updateDisplayingBoardgameItemList(searchQuery: String) {
         viewModelScope.launch {
-            if(searchQuery.isBlank()) {
+            if (searchQuery.isBlank()) {
                 displayingBoardgameItemList = entireBoardgameItemList
+            } else {
+                displayingBoardgameItemList =
+                    repository.getBoardgameFromKeyword(searchQuery).stateIn(viewModelScope).value
             }
-                displayingBoardgameItemList = repository.getBoardgameFromKeyword(searchQuery).stateIn(viewModelScope).value
-
 
             when (displayOrder) {
                 DISPLAY_ORDER.ALPHABETICAL -> {
                     bottomBarLabelText = "전체"
                 }
+
                 DISPLAY_ORDER.FAVORITE -> {
-                    displayingBoardgameItemList = displayingBoardgameItemList.filter { it.isFavorite }
+                    displayingBoardgameItemList =
+                        displayingBoardgameItemList.filter { it.isFavorite }
                     bottomBarLabelText = "즐겨찾기"
                 }
 
                 DISPLAY_ORDER.NON_FAVORITE -> {
-                    displayingBoardgameItemList = displayingBoardgameItemList.filter { !it.isFavorite }
+                    displayingBoardgameItemList =
+                        displayingBoardgameItemList.filter { !it.isFavorite }
                     bottomBarLabelText = "즐겨찾기 제외"
                 }
 
                 DISPLAY_ORDER.RANKING -> {
-
+                    displayingBoardgameItemList = displayingBoardgameItemList.sortedBy {
+                        it.ranking
+                    }
+                    bottomBarLabelText = "전체"
                 }
-                DISPLAY_ORDER.WEIGHT -> {
 
+                DISPLAY_ORDER.WEIGHT -> {
+                    displayingBoardgameItemList = displayingBoardgameItemList.sortedBy {
+                        it.averageWeight
+                    }
+                    bottomBarLabelText = "전체"
                 }
             }
         }

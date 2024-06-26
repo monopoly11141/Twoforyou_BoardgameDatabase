@@ -29,7 +29,7 @@ fun BoardgameMechanismItem(
             text = getKoreanNameOfMechanismItem(mechanism),
             fontSize = 12.sp,
             modifier = Modifier
-                .padding(horizontal = 4.dp, vertical = 1.dp)
+                .padding(horizontal = 4.dp, vertical = 2.dp)
         )
     }
 }
