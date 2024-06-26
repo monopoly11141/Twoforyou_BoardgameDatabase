@@ -1,7 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.ui.display.composable
 
 
-import android.media.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -14,6 +13,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -27,14 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.twoforyou_boardgamedatabase.R
 import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
 import com.example.twoforyou_boardgamedatabase.ui.display.util.DISPLAY_ORDER
 
@@ -48,6 +45,7 @@ fun TopSearchBar(
     var expandOrderDropDownMenu by remember { mutableStateOf(false) }
     var boardgameSearchQuery by remember { mutableStateOf("") }
     var displayIcon by remember { mutableStateOf(Icons.Filled.KeyboardArrowDown) }
+    var openFilterDialog by remember {mutableStateOf(false)}
 
     viewModel.updateDisplayingBoardgameItemList(boardgameSearchQuery)
 
@@ -85,6 +83,7 @@ fun TopSearchBar(
                             }
                             .padding(end = 4.dp)
                     )
+
                     DropdownMenu(
                         expanded = expandOrderDropDownMenu,
                         onDismissRequest = { expandOrderDropDownMenu = false }
@@ -133,6 +132,15 @@ fun TopSearchBar(
                             )
                         }
                     }
+
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert,
+                        contentDescription = "검색 방식",
+                        modifier = Modifier
+                            .clickable {
+                                openFilterDialog = true
+                        }
+                    )
                 }
             },
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
@@ -140,5 +148,11 @@ fun TopSearchBar(
             modifier = Modifier
                 .fillMaxWidth()
         )
+    }
+
+    if(openFilterDialog) {
+        BoardgameFilterDialog(modifier) {
+            openFilterDialog = false
+        }
     }
 }
