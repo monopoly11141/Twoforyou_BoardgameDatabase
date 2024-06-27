@@ -33,4 +33,7 @@ interface BoardgameDao {
 
     @Query("SELECT * FROM boardgame_database WHERE englishName LIKE '%' || :keyword || '%' ORDER BY koreanName ASC, englishName ASC")
     fun getBoardgameFromKeyword(keyword: String): Flow<List<BoardgameItem>>
+
+    @Query("SELECT * FROM boardgame_database where id in (:idList)")
+    fun getBoardgameListByIdList(idList : List<Int>) : Flow<List<BoardgameItem>>
 }
