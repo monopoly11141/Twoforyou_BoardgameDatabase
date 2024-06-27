@@ -32,8 +32,8 @@ fun Navigation(
             )
         }
 
-        composable<Screen.Filtered> {
-            val args = it.toRoute<Screen.Filtered>()
+        composable<Screen.FilteredScreen> {
+            val args = it.toRoute<Screen.FilteredScreen>()
             FilteredScreen(
                 navController = navController,
                 args.idList

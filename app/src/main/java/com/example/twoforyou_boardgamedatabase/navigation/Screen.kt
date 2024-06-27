@@ -13,7 +13,7 @@ sealed class Screen() {
     )
 
     @Serializable
-    data class Filtered(
+    data class FilteredScreen(
         val idList: List<Int> = emptyList()
     )
 }

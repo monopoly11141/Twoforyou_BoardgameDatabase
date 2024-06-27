@@ -19,14 +19,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.twoforyou_boardgamedatabase.navigation.Screen
+import com.example.twoforyou_boardgamedatabase.ui.display.DisplayViewModel
 import java.math.RoundingMode
 
 @Composable
 fun BoardgameFilterDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    viewModel: DisplayViewModel = hiltViewModel(),
 ) {
     var sliderPlayerCountRange by remember { mutableStateOf(1f..10f) }
     var sliderBayesAverageRange by remember { mutableStateOf(0f..10f) }
@@ -93,7 +97,17 @@ fun BoardgameFilterDialog(
                 }
 
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        val filteredBoardgameIdList = viewModel.filterBoardgame(
+                            sliderPlayerCountRange,
+                            sliderBayesAverageRange,
+                            sliderWeightRange
+                        )
+
+                        navController.navigate(
+                            Screen.FilteredScreen(filteredBoardgameIdList)
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)

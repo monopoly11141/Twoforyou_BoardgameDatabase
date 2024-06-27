@@ -1,5 +1,6 @@
 package com.example.twoforyou_boardgamedatabase.ui.display
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -162,6 +163,30 @@ class DisplayViewModel @Inject constructor(
 
     fun updateDisplayOrder(displayOrder: DISPLAY_ORDER) {
         this.displayOrder = displayOrder
+    }
+
+    fun filterBoardgame(
+        playerCountRange: ClosedFloatingPointRange<Float>,
+        bayesAverageRange: ClosedFloatingPointRange<Float>,
+        weightRange: ClosedFloatingPointRange<Float>
+    ): List<Int> {
+
+        Log.d("TAG", "FilterBoardgame : playerCount - ${playerCountRange}, bayesAverage : ${bayesAverageRange}, weight : ${weightRange}")
+        val filteredBoardgameId = mutableListOf<Int>()
+
+        entireBoardgameItemList.filter {
+            it.minPlayersValue >= playerCountRange.start &&
+                    if (playerCountRange.endInclusive.toInt() == 10) { true }
+                    else
+                        it.maxPlayersValue <= playerCountRange.endInclusive &&
+            it.bayesAverageValue >= bayesAverageRange.start &&
+                    it.bayesAverageValue <= bayesAverageRange.endInclusive &&
+                    it.averageWeight >= weightRange.start &&
+                    it.averageWeight <= weightRange.endInclusive
+        }.forEach {
+            filteredBoardgameId.add(it.id)
+        }
+        return filteredBoardgameId
     }
 
 }
